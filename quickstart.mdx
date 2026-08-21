@@ -1,47 +1,84 @@
 ---
-title: "Quickstart"
-description: "Begin with a guide on the fastest path to a successful outcome"
+title: "Get Started with Sherlock in 5 Minutes"
+sidebarTitle: "Quickstart"
+description: "Connect Segment to Sherlock, weight your first events, and see live engagement scores for your users and accounts in under five minutes."
 ---
 
-Describe how someone begins using your product. What is the first thing they need to do? Are there any prerequisites?
-
-A quickstart should take someone from zero to using your product. They'll get a quick win and a sense of what they can accomplish.
-
-## Prerequisites
-
-Before you begin, you must have:
-
-- Requirement one (for example, Node.js 18+, a free account, an API key)
-- Requirement two (for example, a compatible device, a compatible browser, a compatible operating system)
-
-## Get started
+By the end of this guide you will have Sherlock connected to your Segment workspace, your first events flowing into the dashboard, and live engagement scores appearing for every user and account in your product. No engineering work is required — if you have a Segment workspace with events already firing, you can complete every step below in under five minutes.
 
 <Steps>
-  <Step title="Install">
-    Describe how to install your product or sign up.
 
-    ```bash
-    npm install your-package
-    ```
-  </Step>
-  <Step title="Configure">
-    Describe any setup or configuration needed before first use.
+  <Step title="Create your Sherlock account">
+    Go to [app.sherlockscore.com](https://app.sherlockscore.com) and sign up with your work email. After confirming your address you will land on the Sherlock dashboard. Keep this tab open — you will need it in the next step.
 
-    ```bash
-    your-cli init
-    ```
+    <Note>
+      Sherlock accounts are workspace-level, not individual. Invite the rest of your team from **Settings → Team Members** so everyone can see scores from day one.
+    </Note>
   </Step>
-  <Step title="Run it">
-    Show the first thing a user does to see it working.
 
-    ```bash
-    your-cli start
-    ```
+  <Step title="Connect your Segment workspace">
+    1. In Sherlock, navigate to **Settings → Integrations → Segment**.
+    2. Copy the **Sherlock Write Key** displayed on that page.
+    3. In a new tab, open your [Segment workspace](https://app.segment.com) and go to **Connections → Destinations → Add Destination**.
+    4. Search for **Sherlock**, select it, and paste your Write Key into the **API Key** field.
+    5. Toggle the destination to **Enabled** and click **Save**.
+
+    Segment will begin forwarding `track`, `identify`, and `group` calls to Sherlock within seconds of saving.
+
+    <Warning>
+      Make sure the Segment source you connect is the one that contains your **production** product events. Connecting a development or staging source will skew your engagement scores with test data.
+    </Warning>
   </Step>
+
+  <Step title="Verify events are flowing">
+    Return to Sherlock and click **Events** in the left-hand navigation. Within a minute or two of enabling the Segment destination you should see a live stream of incoming events. Each row shows the event name, the user who triggered it, and the timestamp.
+
+    If no events appear after five minutes, double-check that the Segment destination is enabled and that your source is actively receiving traffic. See [Troubleshooting the Segment Integration](/integrations/segment#troubleshooting) for a full diagnostic checklist.
+
+    <Note>
+      Sherlock only stores events that arrive **after** you connect Segment. Historical event replay is not supported in the current version.
+    </Note>
+  </Step>
+
+  <Step title="Weight your first three events">
+    Raw event counts alone do not tell you much — weighting is what turns activity data into a meaningful engagement score. Navigate to **Events → Scoring** to see every distinct event name Sherlock has received.
+
+    Assign a weight between **1** (low importance) and **10** (high importance) to at least three events:
+
+    | Example event | Suggested weight | Reasoning |
+    |---|---|---|
+    | `report_exported` | 9 | High-intent, deep product usage |
+    | `dashboard_viewed` | 4 | Regular usage, moderate signal |
+    | `logged_in` | 1 | Necessary but not a strong engagement signal |
+
+    Click **Save Weights** when you are done. Sherlock will immediately recalculate scores for all users and accounts using your new weights.
+
+    <Tip>
+      Start conservative — you can always raise weights later. Focus your first pass on two or three events that you instinctively know separate your best customers from occasional visitors.
+    </Tip>
+  </Step>
+
+  <Step title="View your first engagement scores">
+    Navigate to the **Users** tab to see every identified user ranked by their current engagement score. Click any user to see a breakdown of which events contributed to their score and when those events occurred.
+
+    Switch to the **Accounts** tab to see scores rolled up at the company level. Account scores aggregate the activity of every user on that account, giving you a single number to represent the health of each customer relationship.
+
+    <Note>
+      Scores update in near real-time as new events arrive from Segment. Refresh the page at any time to see the latest values.
+    </Note>
+  </Step>
+
 </Steps>
 
 <Tip>
-  Give people a way to get help. This could be a link to a support page, a chat with a customer support agent, or a forum for your product.
-
-  Example: Need help? Reach out to us at [support@yourcompany.com](mailto:support@yourcompany.com).
+  Set up the **Slack integration** (Settings → Integrations → Slack) to receive real-time alerts when a user's engagement score crosses a threshold you define — perfect for flagging Product Qualified Leads the moment they become hot.
 </Tip>
+
+<CardGroup cols={2}>
+  <Card title="Segment Integration" icon="circle-nodes" href="/integrations/segment">
+    Deep-dive into the Segment connection: event filtering, identify calls, group calls, and advanced configuration options.
+  </Card>
+  <Card title="Event Weighting" icon="sliders" href="/scoring/event-weighting">
+    Learn the full event weighting model and best practices for calibrating weights to match your product's unique engagement patterns.
+  </Card>
+</CardGroup>

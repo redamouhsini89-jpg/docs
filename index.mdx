@@ -1,20 +1,55 @@
 ---
-title: "Introduction"
-description: "Welcome to your project"
+title: "Sherlock: Product Engagement Scoring for B2B SaaS"
+sidebarTitle: "Home"
+description: "Sherlock turns your in-app event data into engagement scores for every user and account, so your team can act on who's thriving and who's at risk."
 ---
 
-Write a short description of your product here. What it does, who it's for, and what they can accomplish with it.
+Sherlock transforms your raw product usage data into a clear engagement score for every user and account on your platform. By weighting the events that matter most to your product, Sherlock gives you a definitive ranking of your most and least engaged customers — so your sales, success, and product teams always know exactly where to focus.
 
-<Tip>
-  Ready to make this your own? Start by editing this page. Update your `docs.json` file to customize your site. Then fill out the [Quickstart](/quickstart) page.
-</Tip>
+<CardGroup cols={2}>
+  <Card title="Quick Start" icon="rocket" href="/quickstart">
+    Connect Segment, weight your events, and see your first engagement scores in minutes.
+  </Card>
+  <Card title="Core Concepts" icon="lightbulb" href="/core-concepts">
+    Understand engagement scores, event weighting, and how Sherlock ranks your users and accounts.
+  </Card>
+  <Card title="Segment Integration" icon="plug" href="/integrations/segment">
+    Connect your Segment source to start streaming product events into Sherlock.
+  </Card>
+  <Card title="API Reference" icon="code" href="/api/introduction">
+    Query scores, users, accounts, and events programmatically via the REST API.
+  </Card>
+</CardGroup>
 
-<Card title="Quickstart" icon="rocket" href="/quickstart">
-  This card links to the quickstart page in your project.
-</Card>
-<Card title="Components" icon="puzzle-piece" href="https://mintlify.com/docs/components">
-  Add cards, callouts, steps, tabs, and more to design and structure your pages.
-</Card>
-<Card title="Settings" icon="gear" href="https://mintlify.com/docs/organize/settings">
-  Set your site name, branding, and navigation in the `docs.json` file.
-</Card>
+## How Sherlock Works
+
+Sherlock is built on three simple ideas: capture every in-app action, let you decide what matters, and surface the results everywhere your team works.
+
+<Steps>
+  <Step title="Connect your data source">
+    Link your [Segment](https://segment.com) workspace to Sherlock. All product events you already track begin flowing in immediately — no extra instrumentation required.
+  </Step>
+  <Step title="Weight your events">
+    Assign a weight from 1–10 to each event based on how much it signals true engagement in your product. A user completing onboarding might score a 9; a page view might score a 1.
+  </Step>
+  <Step title="Let Sherlock score your users and accounts">
+    Sherlock automatically calculates engagement scores for every user and account and keeps them up to date as new events arrive.
+  </Step>
+  <Step title="Act on the scores">
+    Surface scores in Slack, push them to your CRM, or pull them via the API to drive PQL workflows, churn alerts, and customer health dashboards.
+  </Step>
+</Steps>
+
+## Explore by Role
+
+<CardGroup cols={3}>
+  <Card title="Product Teams" icon="chart-bar" href="/use-cases/product-insights">
+    Discover which features drive the highest engagement and validate your roadmap with real usage data.
+  </Card>
+  <Card title="Sales Teams" icon="bullseye" href="/use-cases/product-qualified-leads">
+    Prioritize trial accounts by engagement score and reach out to your hottest Product Qualified Leads first.
+  </Card>
+  <Card title="Customer Success" icon="heart" href="/use-cases/customer-success">
+    Spot at-risk accounts early and celebrate your champions before they're poached by the competition.
+  </Card>
+</CardGroup>

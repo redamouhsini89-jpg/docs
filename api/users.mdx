@@ -1,0 +1,268 @@
+---
+title: "REST API Endpoints for Users"
+sidebarTitle: "Users"
+description: "List users with their engagement scores, retrieve a single user's score and event history, and filter users by score range, traits, and PQL status."
+---
+
+The Users API lets you retrieve and filter the people Sherlock tracks across your product. Each user object carries a real-time engagement score, PQL status, and a link to the account they belong to. Use these endpoints to power sales dashboards, trigger CRM workflows, or build internal tooling on top of Sherlock's scoring data.
+
+---
+
+## GET /users
+
+List all users in your workspace along with their current engagement scores. Results are paginated and can be filtered by score range or PQL status.
+
+### Query Parameters
+
+<ParamField query="page" type="integer" default="1">
+  The page number to return.
+</ParamField>
+
+<ParamField query="per_page" type="integer" default="50">
+  Number of users to return per page. Maximum value is `200`.
+</ParamField>
+
+<ParamField query="min_score" type="float">
+  Filter to users with a score at or above this value. Must be between `0` and `100`.
+</ParamField>
+
+<ParamField query="max_score" type="float">
+  Filter to users with a score at or below this value. Must be between `0` and `100`.
+</ParamField>
+
+<ParamField query="pql" type="boolean">
+  When `true`, returns only users that Sherlock has flagged as Product Qualified Leads. When `false`, excludes PQLs from results.
+</ParamField>
+
+<ParamField query="sort" type="string" default="score_desc">
+  Sort order for results. Accepted values:
+
+  - `score_desc` — highest score first (default)
+  - `score_asc` — lowest score first
+  - `last_active_desc` — most recently active first
+</ParamField>
+
+### Response Fields
+
+<ResponseField name="data" type="array">
+  An array of user objects.
+
+  <Expandable title="User object fields">
+    <ResponseField name="id" type="string">
+      Sherlock's internal user ID, prefixed with `usr_`.
+    </ResponseField>
+    <ResponseField name="external_id" type="string">
+      The user ID from your own system, as passed during tracking.
+    </ResponseField>
+    <ResponseField name="email" type="string">
+      The user's email address.
+    </ResponseField>
+    <ResponseField name="name" type="string">
+      The user's display name.
+    </ResponseField>
+    <ResponseField name="score" type="float">
+      The user's current engagement score, from `0.0` to `100.0`.
+    </ResponseField>
+    <ResponseField name="pql" type="boolean">
+      Whether Sherlock currently considers this user a Product Qualified Lead.
+    </ResponseField>
+    <ResponseField name="account_id" type="string">
+      The Sherlock ID of the account this user belongs to.
+    </ResponseField>
+    <ResponseField name="last_active_at" type="string">
+      ISO 8601 timestamp of the user's most recent tracked event.
+    </ResponseField>
+    <ResponseField name="created_at" type="string">
+      ISO 8601 timestamp of when Sherlock first saw this user.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="meta" type="object">
+  Pagination metadata.
+
+  <Expandable title="Meta fields">
+    <ResponseField name="total" type="integer">
+      Total number of users matching the current filters.
+    </ResponseField>
+    <ResponseField name="page" type="integer">
+      The current page number.
+    </ResponseField>
+    <ResponseField name="per_page" type="integer">
+      The number of results returned per page.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+### Example Request
+
+```bash
+curl https://api.sherlockscore.com/v1/users?pql=true&sort=score_desc&per_page=50 \
+  -H "Authorization: Bearer <api_key>"
+```
+
+### Example Response
+
+```json
+{
+  "data": [
+    {
+      "id": "usr_abc123",
+      "external_id": "user-456",
+      "email": "jane@acme.com",
+      "name": "Jane Smith",
+      "score": 78.4,
+      "pql": true,
+      "account_id": "acc_xyz789",
+      "last_active_at": "2024-01-14T09:22:00Z",
+      "created_at": "2023-06-01T12:00:00Z"
+    }
+  ],
+  "meta": { "total": 1240, "page": 1, "per_page": 50 }
+}
+```
+
+---
+
+## GET /users/:id
+
+Retrieve a single user by their Sherlock ID or by your own external ID. The response includes everything in the list object plus the user's synced Segment traits.
+
+### Path Parameters
+
+<ParamField path="id" type="string" required>
+  The user identifier. Pass a Sherlock user ID (e.g., `usr_abc123`) or prefix your own external ID with `ext:` to look up by external ID (e.g., `ext:user-456`).
+</ParamField>
+
+### Response Fields
+
+<ResponseField name="data" type="object">
+  A single user object. Includes all fields from the list response, plus:
+
+  <Expandable title="Additional fields">
+    <ResponseField name="traits" type="object">
+      A free-form object containing the latest trait values synced from Segment for this user — for example, `plan`, `company`, or any custom trait you track.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+### Example Request
+
+<CodeGroup>
+
+```bash Sherlock ID
+curl https://api.sherlockscore.com/v1/users/usr_abc123 \
+  -H "Authorization: Bearer <api_key>"
+```
+
+```bash External ID
+curl https://api.sherlockscore.com/v1/users/ext:user-456 \
+  -H "Authorization: Bearer <api_key>"
+```
+
+</CodeGroup>
+
+### Example Response
+
+```json
+{
+  "data": {
+    "id": "usr_abc123",
+    "external_id": "user-456",
+    "email": "jane@acme.com",
+    "name": "Jane Smith",
+    "score": 78.4,
+    "pql": true,
+    "account_id": "acc_xyz789",
+    "last_active_at": "2024-01-14T09:22:00Z",
+    "created_at": "2023-06-01T12:00:00Z",
+    "traits": {
+      "plan": "pro",
+      "company": "Acme Corp",
+      "role": "analyst"
+    }
+  }
+}
+```
+
+---
+
+## GET /users/:id/events
+
+Retrieve recent product events for a user. Use this endpoint to understand exactly which actions are driving — or suppressing — their engagement score.
+
+### Path Parameters
+
+<ParamField path="id" type="string" required>
+  The user identifier. Accepts a Sherlock user ID (`usr_*`) or an external ID prefixed with `ext:`.
+</ParamField>
+
+### Query Parameters
+
+<ParamField query="limit" type="integer" default="20">
+  Maximum number of events to return. Cannot exceed `100`.
+</ParamField>
+
+<ParamField query="since" type="string">
+  Return only events that occurred after this ISO 8601 timestamp (e.g., `2024-01-01T00:00:00Z`). Useful for fetching incremental updates.
+</ParamField>
+
+### Response Fields
+
+<ResponseField name="data" type="array">
+  An array of event objects.
+
+  <Expandable title="Event object fields">
+    <ResponseField name="id" type="string">
+      Sherlock's internal event ID.
+    </ResponseField>
+    <ResponseField name="event" type="string">
+      The name of the tracked event (e.g., `Report Generated`).
+    </ResponseField>
+    <ResponseField name="timestamp" type="string">
+      ISO 8601 timestamp of when the event occurred.
+    </ResponseField>
+    <ResponseField name="score_contribution" type="float">
+      The amount this event contributed to the user's overall score at the time it was processed.
+    </ResponseField>
+    <ResponseField name="properties" type="object">
+      Additional metadata attached to the event.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+### Example Request
+
+```bash
+curl "https://api.sherlockscore.com/v1/users/usr_abc123/events?limit=20&since=2024-01-01T00:00:00Z" \
+  -H "Authorization: Bearer <api_key>"
+```
+
+### Example Response
+
+```json
+{
+  "data": [
+    {
+      "id": "evt_def456",
+      "event": "Report Generated",
+      "timestamp": "2024-01-14T09:22:00Z",
+      "score_contribution": 4.2,
+      "properties": {
+        "report_type": "monthly_summary"
+      }
+    },
+    {
+      "id": "evt_ghi789",
+      "event": "Dashboard Viewed",
+      "timestamp": "2024-01-13T16:05:00Z",
+      "score_contribution": 1.8,
+      "properties": {}
+    }
+  ]
+}
+```
+
+<Tip>
+  Pair this endpoint with `GET /users/:id` to build a complete picture of a user's engagement: their current score alongside the specific actions that got them there.
+</Tip>

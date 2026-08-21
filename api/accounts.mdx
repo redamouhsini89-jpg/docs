@@ -1,0 +1,247 @@
+---
+title: "REST API Endpoints for Accounts"
+sidebarTitle: "Accounts"
+description: "List accounts with engagement scores, retrieve a single account, filter by score range or churn risk, and view the users associated with each account."
+---
+
+The Accounts API gives you access to company-level engagement scores that Sherlock computes by aggregating activity across all users in an account. Use these endpoints to identify at-risk accounts before they churn, surface high-engagement accounts for expansion plays, or sync account health data into your CRM.
+
+---
+
+## GET /accounts
+
+List all accounts in your workspace along with their current engagement scores. You can filter by score range or narrow results to accounts flagged as churn risks.
+
+### Query Parameters
+
+<ParamField query="page" type="integer" default="1">
+  The page number to return.
+</ParamField>
+
+<ParamField query="per_page" type="integer" default="50">
+  Number of accounts to return per page. Maximum value is `200`.
+</ParamField>
+
+<ParamField query="min_score" type="float">
+  Filter to accounts with a score at or above this value. Must be between `0` and `100`.
+</ParamField>
+
+<ParamField query="max_score" type="float">
+  Filter to accounts with a score at or below this value. Must be between `0` and `100`.
+</ParamField>
+
+<ParamField query="churn_risk" type="boolean">
+  When `true`, returns only accounts that Sherlock has flagged as at risk of churning. When `false`, excludes at-risk accounts from results.
+</ParamField>
+
+<ParamField query="sort" type="string" default="score_desc">
+  Sort order for results. Accepted values:
+
+  - `score_desc` — highest score first (default)
+  - `score_asc` — lowest score first
+  - `last_active_desc` — most recently active first
+</ParamField>
+
+### Response Fields
+
+<ResponseField name="data" type="array">
+  An array of account objects.
+
+  <Expandable title="Account object fields">
+    <ResponseField name="id" type="string">
+      Sherlock's internal account ID, prefixed with `acc_`.
+    </ResponseField>
+    <ResponseField name="external_id" type="string">
+      The account ID from your own system, as passed during tracking.
+    </ResponseField>
+    <ResponseField name="name" type="string">
+      The account's display name.
+    </ResponseField>
+    <ResponseField name="score" type="float">
+      The account's current engagement score, from `0.0` to `100.0`. This is an aggregate of activity across all users in the account.
+    </ResponseField>
+    <ResponseField name="churn_risk" type="boolean">
+      Whether Sherlock currently flags this account as at risk of churning.
+    </ResponseField>
+    <ResponseField name="user_count" type="integer">
+      The number of users Sherlock has seen associated with this account.
+    </ResponseField>
+    <ResponseField name="last_active_at" type="string">
+      ISO 8601 timestamp of the most recent tracked event across any user in the account.
+    </ResponseField>
+    <ResponseField name="created_at" type="string">
+      ISO 8601 timestamp of when Sherlock first saw this account.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="meta" type="object">
+  Pagination metadata.
+
+  <Expandable title="Meta fields">
+    <ResponseField name="total" type="integer">
+      Total number of accounts matching the current filters.
+    </ResponseField>
+    <ResponseField name="page" type="integer">
+      The current page number.
+    </ResponseField>
+    <ResponseField name="per_page" type="integer">
+      The number of results returned per page.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+### Example Request
+
+```bash
+curl "https://api.sherlockscore.com/v1/accounts?churn_risk=true&sort=score_asc" \
+  -H "Authorization: Bearer <api_key>"
+```
+
+### Example Response
+
+```json
+{
+  "data": [
+    {
+      "id": "acc_xyz789",
+      "external_id": "acme-corp",
+      "name": "Acme Corp",
+      "score": 65.2,
+      "churn_risk": false,
+      "user_count": 8,
+      "last_active_at": "2024-01-14T15:00:00Z",
+      "created_at": "2023-05-15T08:00:00Z"
+    }
+  ],
+  "meta": { "total": 340, "page": 1, "per_page": 50 }
+}
+```
+
+---
+
+## GET /accounts/:id
+
+Retrieve a single account by its Sherlock ID or by your own external ID. The response includes the full account object with all fields returned by the list endpoint.
+
+### Path Parameters
+
+<ParamField path="id" type="string" required>
+  The account identifier. Pass a Sherlock account ID (e.g., `acc_xyz789`) or prefix your own external ID with `ext:` to look up by external ID (e.g., `ext:acme-corp`).
+</ParamField>
+
+### Example Request
+
+<CodeGroup>
+
+```bash Sherlock ID
+curl https://api.sherlockscore.com/v1/accounts/acc_xyz789 \
+  -H "Authorization: Bearer <api_key>"
+```
+
+```bash External ID
+curl https://api.sherlockscore.com/v1/accounts/ext:acme-corp \
+  -H "Authorization: Bearer <api_key>"
+```
+
+</CodeGroup>
+
+### Example Response
+
+```json
+{
+  "data": {
+    "id": "acc_xyz789",
+    "external_id": "acme-corp",
+    "name": "Acme Corp",
+    "score": 65.2,
+    "churn_risk": false,
+    "user_count": 8,
+    "last_active_at": "2024-01-14T15:00:00Z",
+    "created_at": "2023-05-15T08:00:00Z"
+  }
+}
+```
+
+---
+
+## GET /accounts/:id/users
+
+List all users associated with an account, each with their individual engagement score. Use this endpoint to identify the most (and least) engaged individuals within a given customer account.
+
+### Path Parameters
+
+<ParamField path="id" type="string" required>
+  The account identifier. Accepts a Sherlock account ID (`acc_*`) or an external ID prefixed with `ext:`.
+</ParamField>
+
+### Query Parameters
+
+<ParamField query="page" type="integer" default="1">
+  The page number to return.
+</ParamField>
+
+<ParamField query="per_page" type="integer" default="50">
+  Number of users to return per page. Maximum value is `200`.
+</ParamField>
+
+<ParamField query="sort" type="string" default="score_desc">
+  Sort order for results. Accepted values:
+
+  - `score_desc` — highest score first (default)
+  - `score_asc` — lowest score first
+  - `last_active_desc` — most recently active first
+</ParamField>
+
+### Response Fields
+
+<ResponseField name="data" type="array">
+  An array of user objects belonging to this account. Each object contains the same fields as the response from `GET /users`.
+</ResponseField>
+
+<ResponseField name="meta" type="object">
+  Pagination metadata including `total`, `page`, and `per_page`.
+</ResponseField>
+
+### Example Request
+
+```bash
+curl "https://api.sherlockscore.com/v1/accounts/acc_xyz789/users?sort=score_desc" \
+  -H "Authorization: Bearer <api_key>"
+```
+
+### Example Response
+
+```json
+{
+  "data": [
+    {
+      "id": "usr_abc123",
+      "external_id": "user-456",
+      "email": "jane@acme.com",
+      "name": "Jane Smith",
+      "score": 78.4,
+      "pql": true,
+      "account_id": "acc_xyz789",
+      "last_active_at": "2024-01-14T09:22:00Z",
+      "created_at": "2023-06-01T12:00:00Z"
+    },
+    {
+      "id": "usr_def456",
+      "external_id": "user-789",
+      "email": "bob@acme.com",
+      "name": "Bob Chen",
+      "score": 31.0,
+      "pql": false,
+      "account_id": "acc_xyz789",
+      "last_active_at": "2024-01-10T11:00:00Z",
+      "created_at": "2023-06-01T12:00:00Z"
+    }
+  ],
+  "meta": { "total": 8, "page": 1, "per_page": 50 }
+}
+```
+
+<Tip>
+  Combine this endpoint with `GET /accounts/:id` to build account health summaries: fetch the account-level score for the headline metric, then page through its users to identify champions and disengaged seats.
+</Tip>

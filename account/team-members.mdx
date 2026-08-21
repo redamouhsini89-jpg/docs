@@ -1,0 +1,80 @@
+---
+title: "Manage Team Members and Roles in Sherlock"
+sidebarTitle: "Team Members"
+description: "Invite teammates to your Sherlock workspace, assign roles, and control who can configure scoring, manage integrations, and view engagement data."
+---
+
+Sherlock is most powerful when your whole team — from product and customer success to sales and marketing — has visibility into engagement data. Adding teammates to your workspace ensures everyone works from the same scores, the same account health signals, and the same source of truth. Navigate to **Settings → Team** to manage who has access and what they can do.
+
+## Roles and Permissions
+
+Every team member is assigned one of three roles. Choose the role that matches the level of access each person needs.
+
+| Role | Permissions |
+|---|---|
+| **Admin** | Full access: workspace settings, integrations, scoring configuration, billing, and team management |
+| **Editor** | Can configure event weights and scoring settings; cannot manage billing or invite/remove team members |
+| **Viewer** | Read-only access to scores, users, accounts, and dashboards; cannot change any configuration |
+
+## Invite a Team Member
+
+<Steps>
+  <Step title="Open Team Settings">
+    Navigate to **Settings → Team** in your Sherlock dashboard.
+  </Step>
+  <Step title="Click Invite Member">
+    Select the **Invite Member** button in the top-right corner of the Team page.
+  </Step>
+  <Step title="Enter the invitee's email address">
+    Type the email address of the person you want to add to your workspace.
+  </Step>
+  <Step title="Select a role">
+    Choose **Admin**, **Editor**, or **Viewer** from the role dropdown. You can always change this later.
+  </Step>
+  <Step title="Send the invite">
+    Click **Send Invite**. Sherlock immediately emails an invitation link to the address you entered.
+  </Step>
+</Steps>
+
+The invitee receives an email with an **Accept Invitation** link. Clicking it brings them to Sherlock, where they either create a new account or log into their existing one. Once they accept, they appear as an active member in your **Settings → Team** list.
+
+## Change a Member's Role
+
+<Steps>
+  <Step title="Open Team Settings">
+    Navigate to **Settings → Team**.
+  </Step>
+  <Step title="Select the member">
+    Click the team member whose role you want to update.
+  </Step>
+  <Step title="Change the role">
+    Use the **Role** dropdown to select the new role.
+  </Step>
+  <Step title="Save">
+    Click **Save** to apply the change. The member's permissions update immediately.
+  </Step>
+</Steps>
+
+## Remove a Team Member
+
+<Steps>
+  <Step title="Open Team Settings">
+    Navigate to **Settings → Team**.
+  </Step>
+  <Step title="Select the member">
+    Click the team member you want to remove.
+  </Step>
+  <Step title="Remove from workspace">
+    Click **Remove from Workspace** and confirm the action in the dialog that appears.
+  </Step>
+</Steps>
+
+<Note>
+  Removing a team member **immediately revokes their access** to the workspace — they will not be able to log in or view any data. However, removing a member does not delete any scores, alerts, or configurations they created. All of their contributions remain intact.
+</Note>
+
+## Single Sign-On (SSO)
+
+If your organization uses an identity provider such as Okta, Azure AD, or Google Workspace, team members can log into Sherlock via SSO instead of a password. When SSO is enabled, invitations still work the same way — but the **Accept Invitation** flow routes members through your identity provider for authentication.
+
+SSO is available on the **Enterprise** plan. Contact [Sherlock Support](mailto:support@sherlock.io) to enable SSO for your workspace and configure your identity provider.

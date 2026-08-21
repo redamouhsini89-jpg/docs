@@ -1,0 +1,47 @@
+---
+title: "Account-Level Engagement Scoring in Sherlock"
+sidebarTitle: "Account Scoring"
+description: "See how Sherlock rolls up individual user scores into a single account engagement score, giving your CS and sales teams a complete view of each customer account."
+---
+
+Most B2B SaaS products are sold to companies, not individuals. A single account might have dozens of users with wildly different activity levels — a power user who lives in your product every day alongside colleagues who have barely logged in. Your CS and sales teams need a single number that fairly represents the health of the entire account, not just its most or least active member. Sherlock scores at both the **user level** and the **account level**, giving your team a complete picture at every layer of your customer base.
+
+## How Account Scores Are Calculated
+
+Sherlock derives an account's score by **aggregating the scores of all users associated with that account**. The aggregation is not a simple average — it applies a **recency-weighted rollup** that accounts for how recently each user has been active:
+
+- Users who have been active in the last 7 days carry the most weight in the rollup.
+- Users active in the last 8–30 days carry moderate weight.
+- Users with no activity in the last 30 days contribute minimally to the account score.
+
+This approach ensures that an account stays healthy in Sherlock's eyes only when its users are *currently* engaged, not just because someone was highly active three months ago.
+
+## Top-User Weighting
+
+When an account has many users, a small number of power users could theoretically inflate the account score far above what is representative of the broader team's engagement. Sherlock prevents this with **top-user weighting**: the contribution of any single user to the account score is capped, so the score reflects meaningful engagement across the user base rather than the outlier behaviour of one champion.
+
+This means an account with 10 moderately engaged users will typically outscore an account with 1 highly engaged user and 9 inactive ones — a more accurate signal of true account health.
+
+## Account Score Range
+
+Account scores follow the same **0–100 scale** as user scores and are normalised relative to all accounts in your workspace. A score of 0 means no associated user has had qualifying activity in the active time window. A score of 100 means this account is the most engaged in your workspace right now.
+
+## User-to-Account Association
+
+Sherlock builds the user-to-account relationship using Segment's **`group()` calls**. When your application calls `group()` with a `userId` and a `groupId`, Sherlock automatically associates that user with the corresponding account. No additional configuration is required on the Sherlock side — as long as your Segment instrumentation includes `group()` calls, account scoring works out of the box.
+
+<Note>
+  An account must have **at least one associated user** with a recorded score before Sherlock can assign it an account score. Accounts with no linked users appear in the Accounts tab but display a score of 0 until a user association is established via a Segment `group()` call.
+</Note>
+
+## Viewing Account Scores in the Dashboard
+
+Navigate to the **Accounts** tab in the Sherlock sidebar to see every account in your workspace alongside its current engagement score.
+
+From the Accounts tab you can:
+
+- **Sort** accounts by score (highest or lowest first) to instantly surface your most and least engaged customers.
+- **Filter** by score range, subscription plan, or account size to zero in on the segment that matters for a given workflow — for example, high-score accounts on a free plan who are ready for an upgrade conversation.
+- **Click any account** to open the account detail view, which shows a score trend chart, all associated users and their individual scores, and a full event timeline for the account.
+
+This view is the daily starting point for CS teams running health checks and for sales teams hunting for expansion opportunities among existing customers.

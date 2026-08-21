@@ -1,0 +1,110 @@
+---
+title: "Sherlock REST API Reference Overview"
+sidebarTitle: "Introduction"
+description: "Overview of the Sherlock REST API: base URL, versioning, request format, response format, rate limits, and error codes for all API endpoints."
+---
+
+The Sherlock REST API gives you programmatic access to everything in your Sherlock workspace — engagement scores, user and account profiles, raw events, and scoring summaries. Use it to pull scores into your own dashboards, sync engagement data with your CRM, trigger workflows based on score changes, or submit product events from any backend system.
+
+## Base URL
+
+All API requests are made to the following base URL:
+
+```
+https://api.sherlockscore.com/v1
+```
+
+Every request must use **HTTPS**. Plain HTTP is not supported and will be rejected.
+
+## Versioning
+
+The current API version is **`v1`**, reflected in the base URL. Sherlock follows a versioned API model — breaking changes are never introduced within an existing version. When a new version is released, you will receive advance notice and the previous version will remain available for a deprecation window so you can migrate at your own pace.
+
+## Request Format
+
+All request bodies must be sent as JSON. Include the following header on every request that has a body:
+
+```
+Content-Type: application/json
+```
+
+## Response Format
+
+All responses are returned as JSON. A successful response wraps your result in a `data` field alongside a `meta` object that contains a unique request ID and a server-side timestamp:
+
+```json
+{
+  "data": { ... },
+  "meta": {
+    "request_id": "req_abc123",
+    "timestamp": "2024-01-15T10:30:00Z"
+  }
+}
+```
+
+Use the `request_id` when contacting Sherlock support — it allows the team to trace your request end-to-end.
+
+## Rate Limits
+
+The Sherlock API enforces a limit of **1,000 requests per minute** per API key. Every response includes the following headers so you can monitor your usage in real time:
+
+| Header | Description |
+|---|---|
+| `X-RateLimit-Limit` | Maximum requests allowed per minute |
+| `X-RateLimit-Remaining` | Requests remaining in the current window |
+| `X-RateLimit-Reset` | Unix timestamp when the current window resets |
+
+If you exceed the limit, the API returns a `429 Too Many Requests` response. Implement exponential backoff and retry logic to handle this gracefully.
+
+## Error Responses
+
+When a request fails, the API returns a JSON error object instead of a `data` payload. The `code` field contains a machine-readable identifier you can use for programmatic error handling:
+
+```json
+{
+  "error": {
+    "code": "invalid_api_key",
+    "message": "The API key provided is invalid or has been revoked.",
+    "request_id": "req_xyz789"
+  }
+}
+```
+
+## HTTP Status Codes
+
+| Status | Meaning |
+|---|---|
+| `200` | Success |
+| `201` | Created |
+| `400` | Bad Request — check request body |
+| `401` | Unauthorized — invalid or missing API key |
+| `404` | Not Found — resource does not exist |
+| `429` | Too Many Requests — rate limit exceeded |
+| `500` | Server Error — retry with exponential backoff |
+
+## Pagination
+
+List endpoints return paginated results. Use the `page` and `per_page` query parameters to control which page of results you receive. The `meta` object in the response always includes the full pagination context:
+
+| Field | Description |
+|---|---|
+| `meta.total` | Total number of records matching your query |
+| `meta.page` | The current page number |
+| `meta.per_page` | The number of records returned per page |
+
+For example, to fetch the second page of users with 50 results per page:
+
+```
+GET /users?page=2&per_page=50
+```
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Authentication" icon="key" href="/api/authentication">
+    Learn how to generate an API key and authenticate every request with a Bearer token.
+  </Card>
+  <Card title="Users" icon="user" href="/api/users">
+    Query engagement scores and profile data for individual users in your workspace.
+  </Card>
+</CardGroup>

@@ -1,0 +1,63 @@
+---
+title: "Customize Your Sherlock Scoring Model"
+sidebarTitle: "Customization"
+description: "Tailor Sherlock's scoring model to your product by adjusting score decay, time windows, and event exclusions so scores stay accurate as your product evolves."
+---
+
+Sherlock is designed to flex to your product, not the other way around. Out of the box, it ships with sensible defaults that work well for most SaaS products — but the businesses that get the most out of Sherlock are the ones that invest a little time tuning the model to reflect how their customers actually succeed. Every setting described on this page is accessible without engineering help, and changes take effect immediately.
+
+## Score Decay
+
+Real engagement is current engagement. An account that was highly active six months ago but has gone quiet is not as healthy as its historical score might suggest. Score decay solves this by reducing the contribution of older events to the current score over time.
+
+Sherlock uses a **half-life model**: the weight of any event is halved every *n* days, where *n* is your configured decay period. The default is **30 days**.
+
+| Decay setting | Best suited for |
+|--------------|----------------|
+| **7 days** | High-frequency products where weekly activity is the baseline expectation |
+| **30 days** (default) | Most B2B SaaS products with monthly usage cycles |
+| **90 days** | Low-frequency products where quarterly engagement is normal |
+
+To adjust the decay period, go to **Settings → Scoring → Decay** and enter your preferred half-life in days.
+
+<Warning>
+  Changing the decay period or time window setting triggers a **full score recalculation** across all users and accounts in your workspace. This process typically completes within a few minutes, but scores may fluctuate during recalculation. Avoid making CRM syncs or alert-based automations depend on scores during this window.
+</Warning>
+
+## Time Window
+
+The time window setting tells Sherlock how far back to look when calculating scores. Events outside the window do not contribute to the current score at all, regardless of their weight.
+
+You can focus scores on the last **7, 30, or 90 days** of activity. Navigate to **Settings → Scoring → Time Window** to change this setting.
+
+- Use **7 days** to make scores highly responsive to recent behaviour — useful for products with a high expected usage frequency, like daily-use tools.
+- Use **30 days** (default) for a balanced view that smooths out short gaps in activity without over-rewarding distant history.
+- Use **90 days** for products with naturally longer usage cycles, such as quarterly planning tools or infrequent-but-critical workflows.
+
+## Event Exclusions
+
+Not every event in your Segment stream belongs in your scoring model. Automated bot actions, internal testing events, or events fired by backend jobs can pollute your scores and make engaged users look more active than they really are.
+
+To exclude an event from scoring entirely, go to **Events → Scoring** and toggle the **Include in scoring** switch off for any event you want to suppress. Excluded events still appear in the event list for reference but contribute zero weight to any score calculation.
+
+Common candidates for exclusion include:
+
+- Events fired by your own QA or integration test suites
+- Automated background sync or webhook events
+- Internal admin or support impersonation sessions
+
+## Anonymous Events
+
+By default, Sherlock **excludes anonymous events** — those fired before a user is identified via Segment's `identify()` call — from scoring. This prevents pre-signup or pre-login activity from inflating scores before you know who the user is.
+
+If your product has meaningful pre-identify engagement you want to capture (for example, a generous free trial with no required login), you can enable anonymous event inclusion by going to **Settings → Scoring → Anonymous Events** and toggling **Include anonymous events** on. When a user is subsequently identified, Sherlock merges their anonymous history into their identified profile.
+
+## Resetting and Recalculating Scores
+
+If you have made significant changes to your event weights, decay settings, or time window, you can force a full score recalculation to ensure all scores reflect your latest configuration immediately.
+
+Navigate to **Settings → Scoring → Recalculate Scores** and click **Recalculate Now**. Sherlock will reprocess all historical events in your active time window using your current weights and settings. You will see a progress indicator in the Settings panel while recalculation is running.
+
+<Tip>
+  Before rolling out significant scoring model changes to your production workspace, test them in a **staging environment** connected to a Segment development source. Apply your proposed weights and settings there first, review the resulting score distribution, and only promote the changes to production once you are confident the scores reflect your intent.
+</Tip>

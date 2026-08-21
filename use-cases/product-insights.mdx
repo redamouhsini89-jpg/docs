@@ -1,0 +1,58 @@
+---
+title: "Drive Product Decisions with Engagement Insights"
+sidebarTitle: "Product Insights"
+description: "Use Sherlock's event data and engagement scores to discover which features drive retention, validate new releases, and build a product roadmap backed by real user behavior."
+---
+
+Sherlock tells you not just who is engaged, but why. Because every engagement score is built from individually weighted product events, you can work backwards from a high score to understand exactly which behaviors drive it — and from a low score to find out what's missing. Product teams that use Sherlock alongside their scoring configuration gain a continuous feedback loop: the events you've decided matter most are the same events you can analyze to guide roadmap decisions, optimize onboarding, and validate new releases with real behavioral data.
+
+## Key Product Use Cases
+
+### 1. Feature Adoption Tracking
+
+Open the **Events** tab in Sherlock and sort events by frequency among your highest-scored users. The events that appear most often at the top of the list are your stickiest features — the ones your best customers rely on most. Use this data to double down on those features in your marketing messaging, your onboarding flow, and your sales demos. Conversely, high-weight events that appear rarely even among top users may indicate features that are hard to discover or difficult to use.
+
+### 2. Onboarding Optimization
+
+Compare the score trajectory of users who completed each onboarding step against users who skipped it. If users who connected an integration reach a score of 50 within their first two weeks while users who skipped that step plateau at 20, you've identified a critical activation moment. Use that insight to make the skipped step harder to bypass, add in-app prompts, or trigger a targeted email sequence when the step is left incomplete.
+
+### 3. Release Validation
+
+After shipping a new feature or a significant product change, watch the aggregate score trend in Sherlock over the following two to four weeks. If overall engagement scores rise, users are finding and using the new functionality. If scores are flat or declining, the release may not be resonating — or it may have disrupted an existing workflow. Sherlock gives you a behavioral signal on top of your usage metrics so you can validate impact in terms of overall engagement, not just raw event counts.
+
+### 4. Power User Profiling
+
+Filter the **Users** tab to show only users with a score of **80 or higher**. Review the event history for this cohort to map out the ideal engagement pattern: which events do they fire, in what order, and at what frequency? The resulting profile becomes your north star for onboarding design — it describes exactly what "great" looks like in your product, defined by the users who are living it every day.
+
+## Viewing Event Frequency in the Dashboard
+
+To analyze which events are most common among your top users:
+
+<Steps>
+  <Step title="Navigate to the Events tab">
+    In the Sherlock sidebar, click **Events** to open the full list of tracked events.
+  </Step>
+  <Step title="Filter by top-scored users">
+    Use the filter controls to scope the view to users above a score threshold — for example, users with a score of **70 or higher**.
+  </Step>
+  <Step title="Sort by frequency">
+    Click the **Frequency** column header to sort events from most to least common within that cohort. The events at the top are the behaviors that define your highest-engagement users.
+  </Step>
+</Steps>
+
+<Note>
+  Sherlock is a **scoring and engagement tool**, not a full product analytics suite. It does not offer funnel analysis, retention cohorts, or path analysis. For those workflows, use Sherlock alongside a dedicated product analytics tool like Mixpanel or Amplitude. The two are complementary: use Mixpanel or Amplitude to understand user flows and conversion funnels, and use Sherlock to translate overall engagement patterns into actionable scores for sales, CS, and product strategy.
+</Note>
+
+<Tip>
+  Build a **weekly product review ritual** around Sherlock's event data. Each week, pull up the Events tab and look at the top 10 highest-weighted events and the 10 lowest-scoring events across your user base. Ask your team: do the weights still reflect your current product priorities? If you recently launched a new core feature, it may deserve a higher weight than it currently has. If an old event is no longer central to the user journey, consider reducing its weight so it doesn't inflate scores for users who aren't actually getting value from today's product.
+</Tip>
+
+<CardGroup cols={2}>
+  <Card title="Event Weighting" icon="sliders" href="/scoring/event-weighting">
+    Learn how to assign weights to your product events to reflect their importance to engagement.
+  </Card>
+  <Card title="Score Customization" icon="pen-to-square" href="/scoring/customization">
+    Customize scoring windows, decay rates, and account roll-up logic to fit your product model.
+  </Card>
+</CardGroup>

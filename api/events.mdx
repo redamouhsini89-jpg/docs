@@ -1,0 +1,169 @@
+---
+title: "REST API Endpoints for Events"
+sidebarTitle: "Events"
+description: "Submit product events directly to the Sherlock API to update engagement scores, bypassing Segment for custom integrations or server-side event tracking."
+---
+
+The Events API lets you send product events directly to Sherlock without routing them through Segment. This is the right approach when you need server-side event tracking, want to integrate a data source that isn't connected to Segment, or are building a fully custom pipeline. Events submitted here are processed immediately and update user and account scores in real time.
+
+---
+
+## POST /events
+
+Submit one or more product events to Sherlock. Scores for any affected users and accounts are recalculated immediately after the request is accepted. You can send up to 100 events in a single request.
+
+### Request Body Parameters
+
+<ParamField body="events" type="array" required>
+  An array of event objects to submit. Maximum of 100 events per request.
+
+  <Expandable title="Event object fields">
+    <ParamField body="user_id" type="string" required>
+      Your external user ID for the person who performed the event. This must match the ID you use when tracking this user elsewhere (e.g., in Segment).
+    </ParamField>
+
+    <ParamField body="account_id" type="string">
+      Your external account ID to associate this event with a company. When omitted, Sherlock will attempt to resolve the account from the user's existing profile.
+    </ParamField>
+
+    <ParamField body="event" type="string" required>
+      The name of the event. This should match the name of a scored event you have configured in your Sherlock workspace. Unrecognized event names are accepted and stored, but contribute zero to the score until you assign them a weight.
+    </ParamField>
+
+    <ParamField body="timestamp" type="string">
+      ISO 8601 timestamp of when the event occurred (e.g., `2024-01-15T10:30:00Z`). When omitted, Sherlock uses the current server time at the moment the request is received.
+    </ParamField>
+
+    <ParamField body="properties" type="object">
+      A free-form object of additional metadata to store alongside the event. Properties are not used in score calculations but are available when inspecting a user's event history.
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<Note>
+  Events whose `event` name does not match a configured scored event are stored in full but contribute zero points to the score — they are not silently dropped. If you later assign a weight to that event name in your Sherlock workspace, scores will retroactively update to reflect all historical occurrences.
+</Note>
+
+### Response Fields
+
+<ResponseField name="data" type="object">
+  A summary of how the submitted events were handled.
+
+  <Expandable title="Response fields">
+    <ResponseField name="accepted" type="integer">
+      The number of events that were successfully ingested and queued for score processing.
+    </ResponseField>
+    <ResponseField name="rejected" type="integer">
+      The number of events that were rejected due to validation errors (for example, a missing required field). Check the `errors` array for details when this value is greater than zero.
+    </ResponseField>
+    <ResponseField name="errors" type="array">
+      An array of validation error objects, one per rejected event. Each object includes an `index` (the position of the event in your request array) and a `message` describing the problem. Only present when `rejected` is greater than zero.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+### Example Request
+
+<CodeGroup>
+
+```bash cURL
+curl -X POST https://api.sherlockscore.com/v1/events \
+  -H "Authorization: Bearer <api_key>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "events": [
+      {
+        "user_id": "user-456",
+        "account_id": "acme-corp",
+        "event": "Report Generated",
+        "timestamp": "2024-01-15T10:30:00Z",
+        "properties": {
+          "report_type": "monthly_summary"
+        }
+      }
+    ]
+  }'
+```
+
+```python Python
+import requests
+
+url = "https://api.sherlockscore.com/v1/events"
+headers = {
+    "Authorization": "Bearer <api_key>",
+    "Content-Type": "application/json"
+}
+payload = {
+    "events": [
+        {
+            "user_id": "user-456",
+            "account_id": "acme-corp",
+            "event": "Report Generated",
+            "timestamp": "2024-01-15T10:30:00Z",
+            "properties": {
+                "report_type": "monthly_summary"
+            }
+        }
+    ]
+}
+
+response = requests.post(url, json=payload, headers=headers)
+print(response.json())
+```
+
+</CodeGroup>
+
+### Example Response
+
+```json
+{
+  "data": {
+    "accepted": 1,
+    "rejected": 0
+  }
+}
+```
+
+### Batch Example
+
+You can submit multiple events in one request to reduce HTTP overhead. All events in the batch are processed atomically — accepted events are ingested even if others in the same request are rejected.
+
+```bash
+curl -X POST https://api.sherlockscore.com/v1/events \
+  -H "Authorization: Bearer <api_key>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "events": [
+      {
+        "user_id": "user-456",
+        "event": "Dashboard Viewed",
+        "timestamp": "2024-01-15T09:00:00Z"
+      },
+      {
+        "user_id": "user-456",
+        "event": "Report Generated",
+        "timestamp": "2024-01-15T10:30:00Z",
+        "properties": { "report_type": "monthly_summary" }
+      },
+      {
+        "user_id": "user-789",
+        "account_id": "beta-corp",
+        "event": "Invite Sent",
+        "timestamp": "2024-01-15T11:00:00Z"
+      }
+    ]
+  }'
+```
+
+```json
+{
+  "data": {
+    "accepted": 3,
+    "rejected": 0
+  }
+}
+```
+
+<Warning>
+  Requests containing more than 100 events are rejected entirely with a `422` status. Split large payloads into batches of 100 or fewer before sending.
+</Warning>

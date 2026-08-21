@@ -1,0 +1,56 @@
+---
+title: "Engagement Scoring: How Sherlock Ranks Your Users"
+sidebarTitle: "Overview"
+description: "Understand how Sherlock calculates engagement scores from weighted product events, giving every user and account a definitive ranking your team can act on."
+---
+
+Sherlock's scoring engine is the foundation of everything the platform does. It continuously processes the product events flowing in from Segment, applies the importance weights your team has configured, and produces a single, actionable engagement score for every user and account in your workspace. Instead of drowning in raw event data, your sales, success, and product teams get a clear, ranked view of who is engaged, who is at risk, and who is ready for an upgrade conversation.
+
+## How the Score Is Calculated
+
+Sherlock calculates each user's score as a **weighted sum of their product events** over a rolling time window, then normalises the result to a **0–100 scale** relative to your entire user base.
+
+The process works in three steps:
+
+<Steps>
+  <Step title="Event collection">
+    Sherlock receives `track()` calls from Segment and matches each event to the weights you have defined in the Events → Scoring panel.
+  </Step>
+  <Step title="Weighted summation">
+    Each event occurrence is multiplied by its assigned weight (1–10). The weighted counts are summed across the active time window, with more recent events contributing more than older ones based on your decay settings.
+  </Step>
+  <Step title="Normalisation">
+    The raw weighted total is normalised against the distribution of scores across your entire user base, producing a final score between 0 and 100.
+  </Step>
+</Steps>
+
+## Score Range and What It Means
+
+| Score | What it signals |
+|-------|----------------|
+| **0** | No qualifying activity recorded in the active time window |
+| **1–33** | Low engagement — infrequent or low-weight events only |
+| **34–66** | Moderate engagement — regular usage of core features |
+| **67–99** | High engagement — frequent use of high-value features |
+| **100** | Maximum engagement relative to your current user base |
+
+Because scores are **relative**, a score of 100 does not mean a user has done everything possible — it means they are the most engaged user in your workspace right now. As your user base grows and behaviour shifts, the distribution recalibrates automatically.
+
+## Score Refresh
+
+Scores update in **near real-time** as new events arrive from Segment. There is no nightly batch job to wait for. When a user completes a high-weight action, their score rises within seconds, and that change is immediately reflected in the Sherlock dashboard, any connected CRM, and any active PQL alerts.
+
+## New Accounts and the Bootstrapping Period
+
+When a new account connects to Sherlock or a new user is first identified, their score starts at 0 and rises as events accumulate. During the first few days, scores may shift quickly as Sherlock builds a statistical picture of that user's behaviour — this is expected. Scores typically **stabilise after the first 20–30 events** are recorded. Avoid making high-stakes routing decisions based on scores during the first 48 hours for brand-new accounts.
+
+## Explore Further
+
+<CardGroup cols={2}>
+  <Card title="Event Weighting" icon="sliders" href="/scoring/event-weighting">
+    Learn how to assign 1–10 importance weights to your product events so Sherlock scores reflect the actions that actually drive retention.
+  </Card>
+  <Card title="Account Scoring" icon="building" href="/scoring/account-scoring">
+    See how Sherlock rolls individual user scores up into a single account-level engagement score for your CS and sales teams.
+  </Card>
+</CardGroup>

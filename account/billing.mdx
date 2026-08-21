@@ -1,0 +1,103 @@
+---
+title: "Sherlock Billing, Plans, and Usage"
+sidebarTitle: "Billing"
+description: "View your current Sherlock plan, track monthly tracked-user usage, update payment details, and manage your subscription from the Billing page."
+---
+
+Everything related to your Sherlock subscription — your current plan, tracked-user usage, payment method, and invoices — lives in one place. Navigate there by going to **Settings → Billing** in your Sherlock dashboard. You must be a workspace **Admin** to view or modify billing information.
+
+## Plans
+
+Sherlock offers three plans sized to fit teams at every stage of growth.
+
+<CardGroup cols={2}>
+  <Card title="Starter" icon="seedling">
+    **Up to 1,000 tracked users**
+
+    Everything you need to get started with product engagement scoring:
+    - Core user and account scoring
+    - Slack integration
+    - Standard support
+  </Card>
+  <Card title="Growth" icon="chart-line">
+    **Up to 10,000 tracked users**
+
+    Built for scaling teams that need deeper integrations:
+    - Everything in Starter
+    - CRM integrations (Salesforce, HubSpot)
+    - Full API access
+    - Priority support
+  </Card>
+  <Card title="Enterprise" icon="building">
+    **Unlimited tracked users**
+
+    For large organizations with advanced requirements:
+    - Everything in Growth
+    - Single Sign-On (SSO)
+    - Dedicated Customer Success Manager
+    - Custom contracts and SLAs
+
+    [Contact sales](mailto:sales@sherlock.io) to get started.
+  </Card>
+  <Card title="Not sure which plan?" icon="circle-question">
+    Start with **Starter** and upgrade at any time from **Settings → Billing → Change Plan**. Your data and configuration carry over automatically — no re-setup required.
+  </Card>
+</CardGroup>
+
+## What Counts as a Tracked User
+
+A **tracked user** is any unique user who has triggered at least one scored event during the current billing period (calendar month). Users who exist in your workspace but have recorded no scored events in the period do not count toward your limit.
+
+If you approach or exceed your plan's tracked-user limit, Sherlock will notify you and prompt you to upgrade. Scoring continues uninterrupted, but you will not be able to add new event sources until you upgrade or the billing period resets.
+
+## View Your Current Usage
+
+To see how many tracked users you have consumed this month relative to your plan limit:
+
+1. Navigate to **Settings → Billing → Usage**.
+2. The Usage dashboard shows your **tracked users this month** and a progress bar against your plan limit.
+3. Usage updates every 24 hours.
+
+<Tip>
+  Set up a usage alert so you are notified before you hit your limit. Go to **Settings → Billing → Usage Alerts** and configure an alert at **80%** of your tracked-user limit. Sherlock will send you an email (and an optional Slack message) when you cross that threshold, giving you time to evaluate and upgrade before any disruption.
+</Tip>
+
+## Upgrade Your Plan
+
+<Steps>
+  <Step title="Open Billing">
+    Navigate to **Settings → Billing**.
+  </Step>
+  <Step title="Click Change Plan">
+    Select **Change Plan** to open the plan selection screen.
+  </Step>
+  <Step title="Select your new plan">
+    Choose **Growth** or **Enterprise** from the available options.
+  </Step>
+  <Step title="Confirm the upgrade">
+    Review the pricing summary and click **Confirm Upgrade**. Your new plan takes effect immediately and you are billed a prorated amount for the remainder of the current billing period.
+  </Step>
+</Steps>
+
+## Update Payment Details
+
+To update the credit card on file:
+
+1. Navigate to **Settings → Billing → Payment Method**.
+2. Click **Update Card**.
+3. Enter your new card details in the secure payment form.
+4. Click **Save Card** to confirm. All future invoices will be charged to the new card.
+
+Sherlock uses [Stripe](https://stripe.com) to process payments. Your card details are never stored on Sherlock's servers.
+
+## Download Invoices
+
+To access past invoices:
+
+1. Navigate to **Settings → Billing → Invoices**.
+2. You will see a list of all billing periods with their charge amounts and status.
+3. Click the **Download PDF** link next to any invoice to save a copy for your records.
+
+<Note>
+  Plans are billed **monthly** by default. **Annual billing** is available on Growth and Enterprise plans at a discounted rate. Contact [sales@sherlock.io](mailto:sales@sherlock.io) to switch to annual billing and receive your discount.
+</Note>

@@ -1,0 +1,194 @@
+---
+title: "REST API Endpoints for Scores"
+sidebarTitle: "Scores"
+description: "Retrieve engagement score summaries, score distributions, and historical score trends for users and accounts via the Sherlock Scores API."
+---
+
+The Scores API gives you aggregated views of engagement health across your entire workspace, not just individual users or accounts. Use these endpoints to track how overall product adoption is trending, understand how your user base is distributed by engagement level, and pull historical score data for a specific user or account to visualize changes over time.
+
+---
+
+## GET /scores/summary
+
+Retrieve a snapshot of aggregate engagement metrics across your workspace. This endpoint is ideal for populating executive dashboards or monitoring overall product health at a glance.
+
+### Example Request
+
+```bash
+curl https://api.sherlockscore.com/v1/scores/summary \
+  -H "Authorization: Bearer <api_key>"
+```
+
+### Response Fields
+
+<ResponseField name="data" type="object">
+  An object containing workspace-wide score statistics.
+
+  <Expandable title="Summary fields">
+    <ResponseField name="avg_user_score" type="float">
+      The mean engagement score across all users in your workspace.
+    </ResponseField>
+    <ResponseField name="avg_account_score" type="float">
+      The mean engagement score across all accounts in your workspace.
+    </ResponseField>
+    <ResponseField name="pql_count" type="integer">
+      The total number of users currently flagged as Product Qualified Leads.
+    </ResponseField>
+    <ResponseField name="at_risk_count" type="integer">
+      The total number of accounts currently flagged as churn risks.
+    </ResponseField>
+    <ResponseField name="total_users" type="integer">
+      The total number of users Sherlock is tracking in your workspace.
+    </ResponseField>
+    <ResponseField name="total_accounts" type="integer">
+      The total number of accounts Sherlock is tracking in your workspace.
+    </ResponseField>
+    <ResponseField name="as_of" type="string">
+      ISO 8601 timestamp indicating when these statistics were last computed.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+### Example Response
+
+```json
+{
+  "data": {
+    "avg_user_score": 42.1,
+    "avg_account_score": 48.7,
+    "pql_count": 34,
+    "at_risk_count": 12,
+    "total_users": 1240,
+    "total_accounts": 340,
+    "as_of": "2024-01-15T10:30:00Z"
+  }
+}
+```
+
+<Tip>
+  The `as_of` timestamp reflects when Sherlock last ran a full workspace aggregation. Summary statistics are refreshed periodically, not on every request — for real-time scores on a specific user or account, use `GET /users/:id` or `GET /accounts/:id` instead.
+</Tip>
+
+---
+
+## GET /scores/distribution
+
+Get the score distribution for all users or accounts in your workspace, bucketed into decile ranges. Use this endpoint to understand how engagement is spread across your customer base — for example, whether most users cluster in the low-engagement buckets or are distributed evenly.
+
+### Query Parameters
+
+<ParamField query="entity_type" type="string" required>
+  The type of entity to return distribution data for. Accepted values:
+
+  - `user` — distribution across all tracked users
+  - `account` — distribution across all tracked accounts
+</ParamField>
+
+### Response Fields
+
+<ResponseField name="data" type="array">
+  An array of 10 bucket objects covering the full score range from 0 to 100.
+
+  <Expandable title="Bucket object fields">
+    <ResponseField name="bucket" type="string">
+      The score range this bucket covers, expressed as a string (e.g., `"0-9"`, `"10-19"`, … `"90-100"`).
+    </ResponseField>
+    <ResponseField name="count" type="integer">
+      The number of entities whose current score falls within this bucket.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+### Example Request
+
+```bash
+curl "https://api.sherlockscore.com/v1/scores/distribution?entity_type=user" \
+  -H "Authorization: Bearer <api_key>"
+```
+
+### Example Response
+
+```json
+{
+  "data": [
+    { "bucket": "0-9",   "count": 45 },
+    { "bucket": "10-19", "count": 138 },
+    { "bucket": "20-29", "count": 201 },
+    { "bucket": "30-39", "count": 185 },
+    { "bucket": "40-49", "count": 210 },
+    { "bucket": "50-59", "count": 178 },
+    { "bucket": "60-69", "count": 134 },
+    { "bucket": "70-79", "count": 97 },
+    { "bucket": "80-89", "count": 38 },
+    { "bucket": "90-100", "count": 14 }
+  ]
+}
+```
+
+---
+
+## GET /scores/history/:entity_type/:entity_id
+
+Retrieve the score history for a specific user or account over a given time range. Each data point represents the entity's engagement score on a given date. Use this to power trend charts, detect sudden drops, or measure the impact of onboarding changes and new feature releases.
+
+### Path Parameters
+
+<ParamField path="entity_type" type="string" required>
+  The type of entity whose history you want to retrieve. Accepted values: `user` or `account`.
+</ParamField>
+
+<ParamField path="entity_id" type="string" required>
+  The entity's identifier. Accepts a Sherlock ID (e.g., `usr_abc123` or `acc_xyz789`) or an external ID prefixed with `ext:` (e.g., `ext:user-456` or `ext:acme-corp`).
+</ParamField>
+
+### Query Parameters
+
+<ParamField query="from" type="string">
+  Start of the date range, as an ISO 8601 date (e.g., `2024-01-01`). Defaults to 30 days before the current date when omitted.
+</ParamField>
+
+<ParamField query="to" type="string">
+  End of the date range, as an ISO 8601 date (e.g., `2024-01-31`). Defaults to the current date when omitted.
+</ParamField>
+
+### Response Fields
+
+<ResponseField name="data" type="array">
+  An array of daily score data points, ordered chronologically.
+
+  <Expandable title="Data point fields">
+    <ResponseField name="date" type="string">
+      The date of this score snapshot, in `YYYY-MM-DD` format.
+    </ResponseField>
+    <ResponseField name="score" type="float">
+      The entity's engagement score on this date, from `0.0` to `100.0`.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+### Example Request
+
+```bash
+curl "https://api.sherlockscore.com/v1/scores/history/user/usr_abc123?from=2024-01-01&to=2024-01-15" \
+  -H "Authorization: Bearer <api_key>"
+```
+
+### Example Response
+
+```json
+{
+  "data": [
+    { "date": "2024-01-01", "score": 55.3 },
+    { "date": "2024-01-02", "score": 56.1 },
+    { "date": "2024-01-03", "score": 54.8 },
+    { "date": "2024-01-07", "score": 61.2 },
+    { "date": "2024-01-08", "score": 63.5 },
+    { "date": "2024-01-14", "score": 78.4 },
+    { "date": "2024-01-15", "score": 78.4 }
+  ]
+}
+```
+
+<Note>
+  Data points are only recorded on days when Sherlock processes at least one event for the entity. Dates with no activity are omitted from the array rather than returned as `null` entries — gaps in the timeline indicate days with no tracked events.
+</Note>

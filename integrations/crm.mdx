@@ -1,0 +1,111 @@
+---
+title: "Sync Sherlock Scores to Your CRM"
+sidebarTitle: "CRM"
+description: "Push Sherlock engagement scores to Copper, HubSpot, or Salesforce so your sales and success teams always have current engagement data in their CRM workflow."
+---
+
+Engagement scores are most powerful when the people who act on them — account executives, SDRs, and customer success managers — can see them inside the tools they already use every day. Syncing Sherlock scores to your CRM means reps can prioritize outreach, filter their pipeline by product engagement, and walk into every conversation with a clear, data-backed picture of how a prospect or customer is using your product.
+
+## Supported CRMs
+
+Sherlock currently supports native integrations with three CRMs:
+
+<CardGroup cols={3}>
+  <Card title="Copper" icon="building">
+    Sherlock's deepest integration, built on Copper's native platform. Scores sync to People and Companies as custom fields with no additional configuration required.
+  </Card>
+  <Card title="HubSpot" icon="hubspot">
+    Scores appear as custom Contact and Company properties in HubSpot, making them available in views, workflows, and sequences.
+  </Card>
+  <Card title="Salesforce" icon="salesforce">
+    Scores sync to custom fields on Contact and Account objects, where they can be used in reports, list views, and automation rules.
+  </Card>
+</CardGroup>
+
+## Connect Copper
+
+Sherlock was acquired by Copper, so the Copper integration is built directly into both platforms and requires minimal setup.
+
+<Steps>
+  <Step title="Open the Copper integration in Sherlock">
+    Navigate to **Settings → Integrations → Copper**.
+  </Step>
+  <Step title="Connect your Copper account">
+    Click **Connect Copper**. Because Sherlock and Copper share infrastructure, you'll be prompted to confirm your Copper credentials rather than going through a full OAuth flow.
+  </Step>
+  <Step title="Authorize the sync">
+    Review the fields Sherlock will write to and click **Authorize**. Sherlock will immediately begin syncing scores to your Copper workspace.
+  </Step>
+</Steps>
+
+Once connected, Sherlock automatically writes engagement scores to **People** (users) and **Companies** (accounts) in Copper as custom fields. No field-mapping step is required — the fields are pre-configured as part of the native integration.
+
+## Connect HubSpot
+
+<Steps>
+  <Step title="Open the HubSpot integration in Sherlock">
+    Navigate to **Settings → Integrations → HubSpot**.
+  </Step>
+  <Step title="Initiate the connection">
+    Click **Connect HubSpot**. You'll be redirected to HubSpot's OAuth authorization page.
+  </Step>
+  <Step title="Authorize Sherlock">
+    Select the HubSpot account you want to connect and click **Grant Access**. You'll be redirected back to Sherlock once authorization is complete.
+  </Step>
+  <Step title="Save your settings">
+    Confirm the field mapping (see [What Gets Synced](#what-gets-synced) below) and click **Save**. Sherlock will begin syncing scores to HubSpot within a few minutes.
+  </Step>
+</Steps>
+
+Scores appear as **Contact properties** for individual users and **Company properties** for accounts. You can use these properties in HubSpot list filters, enrollment triggers for sequences, and deal pipeline views.
+
+## Connect Salesforce
+
+<Steps>
+  <Step title="Open the Salesforce integration in Sherlock">
+    Navigate to **Settings → Integrations → Salesforce**.
+  </Step>
+  <Step title="Initiate the connection">
+    Click **Connect Salesforce**. You'll be redirected to Salesforce's OAuth login page.
+  </Step>
+  <Step title="Authorize Sherlock">
+    Log in with a Salesforce user that has permission to create and write custom fields, then click **Allow**. You'll be redirected back to Sherlock.
+  </Step>
+  <Step title="Save your settings">
+    Review the field mapping and click **Save**. Sherlock creates the necessary custom fields on the Contact and Account objects if they don't already exist, then begins syncing scores.
+  </Step>
+</Steps>
+
+Scores appear as custom fields on **Contact** (users) and **Account** (accounts) objects in Salesforce. Once synced, you can add them to page layouts, list views, reports, and Process Builder or Flow automations.
+
+## What Gets Synced
+
+Sherlock pushes the following fields to your CRM on every sync:
+
+| Field | Description |
+|---|---|
+| `user_engagement_score` | The current engagement score for the individual user (0–100). |
+| `account_engagement_score` | The rolled-up engagement score for the user's associated account (0–100). |
+| `last_active_at` | Timestamp of the most recent `track` event Sherlock received for this user. |
+| `pql_status` | Boolean indicating whether the user or account currently meets your PQL threshold. |
+
+## Sync Frequency
+
+Sherlock syncs score updates to your CRM in **near real-time** — typically within a few minutes of a score change. Scores are only pushed when they change, so your CRM is not flooded with redundant updates during quiet periods.
+
+<Note>
+  CRM sync is a **one-way push** from Sherlock to your CRM. Changes made to engagement score fields directly in your CRM will not be reflected in Sherlock and will be overwritten on the next sync. Treat these fields as read-only in your CRM.
+</Note>
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Scores are not appearing in my CRM">
+    - Confirm the CRM integration is showing a **Connected** status in **Settings → Integrations**.
+    - Check the **Field Mapping** section of the integration settings to ensure each Sherlock field is mapped to an existing CRM field. If a target field doesn't exist in your CRM, the sync for that field will silently skip.
+    - For Salesforce and HubSpot, verify that the authorizing user has write permission on the Contact/Account (Salesforce) or Contact/Company (HubSpot) objects.
+  </Accordion>
+  <Accordion title="The integration was working but scores have stopped updating">
+    OAuth tokens can expire or be revoked by a CRM admin. Navigate to **Settings → Integrations**, find your CRM, and click **Reconnect** to generate a fresh token and resume syncing. If the issue persists, check your CRM's connected-apps or OAuth settings to ensure Sherlock hasn't been removed.
+  </Accordion>
+</AccordionGroup>

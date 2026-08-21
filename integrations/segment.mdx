@@ -1,0 +1,69 @@
+---
+title: "Connect Segment to Sherlock"
+sidebarTitle: "Segment"
+description: "Set up the Sherlock destination in Segment to stream your product events into Sherlock and start generating engagement scores for users and accounts."
+---
+
+Segment is Sherlock's primary data source. By routing your Segment event stream into Sherlock, you give the scoring engine a complete, real-time picture of how every user and account interacts with your product — without writing a single line of additional instrumentation. Once connected, Sherlock immediately begins processing `track`, `identify`, and `group` calls to build and continuously update engagement scores.
+
+## Prerequisites
+
+- An active Segment workspace with at least one source sending data
+- Admin access to your Sherlock workspace
+
+## Set Up the Segment Integration
+
+<Steps>
+  <Step title="Open the Segment integration in Sherlock">
+    In your Sherlock dashboard, navigate to **Settings → Integrations → Segment**.
+  </Step>
+  <Step title="Copy your Sherlock Write Key">
+    On the Segment integration page, locate your **Sherlock Write Key** and copy it to your clipboard. Keep this value handy — you'll paste it into Segment in the next step.
+  </Step>
+  <Step title="Find the Sherlock destination in Segment">
+    In your Segment workspace, go to **Catalog → Destinations** and search for **Sherlock**. Select the destination and click **Add Destination**, then choose the source you want to connect.
+  </Step>
+  <Step title="Paste your Write Key">
+    In the destination's settings panel, paste your Sherlock Write Key into the **API Key** field.
+  </Step>
+  <Step title="Enable the destination">
+    Toggle the destination to **Enabled** and save your settings.
+  </Step>
+  <Step title="Verify events are arriving">
+    Return to Sherlock and open the **Events** tab. Within a few minutes you should see incoming events populate the list. If you don't see any events after five minutes, see the troubleshooting section below.
+  </Step>
+</Steps>
+
+<Note>
+  Sherlock supports three Segment call types: `track`, `identify`, and `group`. Other call types (e.g., `page`, `screen`, `alias`) are accepted by the destination but are not currently processed for scoring.
+</Note>
+
+## How Sherlock Uses Each Call Type
+
+### `identify` calls
+
+When Segment fires an `identify` call, Sherlock creates or updates the corresponding user profile with the traits you pass — such as `name`, `email`, and `plan`. Keeping these traits current ensures your Sherlock user list stays in sync with your source of truth. Always fire `identify` before `track` for a given user so that Sherlock can attach scored events to a fully populated profile.
+
+### `group` calls
+
+`group` calls tell Sherlock which account a user belongs to and supply account-level traits. Sherlock uses the `groupId` to create or update an account record and associates the calling user with that account. This is how account-level engagement scores are formed — without `group` calls, Sherlock cannot roll individual user scores up into account scores.
+
+### `track` calls
+
+`track` calls are the raw material for engagement scoring. Each event name maps to a scoring rule you configure in Sherlock, and each rule carries a weight between 1 and 10. When a `track` event arrives, Sherlock looks up the matching rule, applies the weight, and recalculates the user's — and their account's — engagement score in near real-time.
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Events are not appearing in Sherlock's Events tab">
+    - Confirm the Sherlock destination is toggled **Enabled** in your Segment workspace.
+    - Double-check that the **API Key** field in the Segment destination settings contains your Sherlock Write Key with no extra spaces or characters.
+    - Verify that the Segment source you connected is actually receiving events (check the source's **Debugger** tab in Segment).
+  </Accordion>
+  <Accordion title="Users are not showing traits (name, email, plan, etc.)">
+    Sherlock populates user traits from `identify` calls. Make sure your instrumentation fires an `identify` call for a user **before** any `track` calls for that same user. If `track` events arrive first, re-fire an `identify` call to backfill the traits — Sherlock will merge them onto the existing profile.
+  </Accordion>
+  <Accordion title="Accounts are not forming or users are not associated with accounts">
+    Account records in Sherlock are created from `group` calls. Ensure your instrumentation fires a `group` call that includes a non-empty `groupId`. Without a `groupId`, Sherlock cannot create or identify an account record, and users will remain unaffiliated.
+  </Accordion>
+</AccordionGroup>

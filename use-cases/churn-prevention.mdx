@@ -1,0 +1,73 @@
+---
+title: "Prevent Churn by Monitoring Engagement Scores"
+sidebarTitle: "Churn Prevention"
+description: "Set churn risk thresholds in Sherlock to automatically flag disengaged accounts before their renewal date so your CS team can intervene before it's too late."
+---
+
+A drop in engagement score is almost always the earliest warning sign of churn — far earlier than a support ticket, a complaint, or a cancellation request. Sherlock surfaces these drops automatically so your customer success team can intervene while there's still time to turn things around. Instead of waiting for a renewal conversation to discover that a customer has gone quiet, you learn about it the moment their behavior changes.
+
+## How Churn Risk Works
+
+Sherlock tracks the engagement score of every account on an ongoing basis. When an account's score falls below a threshold you configure and stays there for a defined number of consecutive days, Sherlock marks that account as **At Risk**. The designation is automatic, real-time, and visible across your entire book of business in a single filtered view.
+
+## Configure Your Churn Risk Threshold
+
+<Steps>
+  <Step title="Open Churn Settings">
+    In the Sherlock sidebar, navigate to **Settings → Churn Settings**.
+  </Step>
+  <Step title="Set your score threshold">
+    Enter the maximum score below which an account is considered disengaged. A common starting point is **25** — accounts scoring at or below this level are flagged as At Risk.
+  </Step>
+  <Step title="Set your consecutive-day window">
+    Specify how many consecutive days the account's score must remain below the threshold before the At Risk flag is applied. This prevents single-day anomalies from triggering false positives. A window of **5–7 days** works well for most teams.
+  </Step>
+  <Step title="Save your configuration">
+    Click **Save**. Sherlock immediately begins monitoring all accounts against your new churn risk criteria.
+  </Step>
+</Steps>
+
+## Identifying At-Risk Accounts
+
+Accounts that meet your churn risk criteria are marked with a **red At Risk badge** in the **Accounts** tab. Filter the view to show only At Risk accounts to instantly see every account that needs attention. Each account record shows the current score, the score trend over time, and the full event history so your team can quickly understand what changed.
+
+## Alert Your CS Team via Slack
+
+<Steps>
+  <Step title="Open Notification Settings">
+    Navigate to **Settings → Notifications**.
+  </Step>
+  <Step title="Enable Churn Risk Alert">
+    Toggle on **Churn Risk Alert** and select the Slack channel where alerts should be delivered — typically a channel like `#cs-alerts` or `#churn-risk`.
+  </Step>
+  <Step title="Save">
+    Click **Save**. Your team will receive a Slack notification each time a new account is marked At Risk, including the account name, current score, assigned CS owner, and a direct link to the account in Sherlock.
+  </Step>
+</Steps>
+
+## Sync Churn Risk to Your CRM
+
+Sherlock automatically writes a `churn_risk: true` field to the corresponding company record in your connected CRM when an account is marked At Risk. Use this field to trigger CRM workflows, surface at-risk accounts in your renewal pipeline views, or route records to a dedicated save sequence.
+
+## Response Playbook
+
+When a churn risk alert fires, move quickly and deliberately. Here's a proven sequence to follow:
+
+<Steps>
+  <Step title="Review the account's recent event history">
+    Open the account in Sherlock and examine the event timeline. Identify when engagement dropped, which events stopped firing, and which users went quiet. Look for a specific inflection point — a failed integration, a feature rollout, or a change in the team using the product.
+  </Step>
+  <Step title="Check for login drop-off among key users">
+    Expand the Users section within the account record. If the primary champion or admin has stopped logging in entirely, escalate the urgency. A single disengaged power user can drag an entire account score down.
+  </Step>
+  <Step title="Reach out with a personalized check-in">
+    Contact the account using what you've learned from the Sherlock timeline. Reference specific things they used to do — "I noticed your team hasn't exported any reports recently" — rather than sending a generic check-in. Specificity signals that you're paying attention.
+  </Step>
+  <Step title="Offer a training session or onboarding refresh">
+    If engagement dropped because users aren't reaching key features or workflows, offer a short live session to rework their setup. An onboarding refresh is one of the most effective tools for re-engaging a drifting account, especially after a product update or a personnel change on their side.
+  </Step>
+</Steps>
+
+<Note>
+  Sherlock applies **score decay** to all accounts — engagement points earned from events diminish over time if those events aren't repeated. This means inactive accounts will naturally slide toward lower scores even without any explicit action. This is by design: a score should reflect recent, ongoing engagement, not historical activity. If an account's score is dropping, it means their team genuinely is less active than they were before.
+</Note>

@@ -1,0 +1,95 @@
+---
+title: "Authenticate Requests to the Sherlock API"
+sidebarTitle: "Authentication"
+description: "Generate a Sherlock API key from your dashboard and pass it as a Bearer token in the Authorization header to authenticate every API request."
+---
+
+Every request you make to the Sherlock API must include a valid API key. Sherlock authenticates requests using the industry-standard Bearer token scheme — you pass your key in the `Authorization` header, and Sherlock verifies it before processing the request. There are no session cookies, no OAuth flows, and no token expiry to manage; your key is valid until you delete it.
+
+## Generate an API Key
+
+<Steps>
+  <Step title="Open API Key Settings">
+    In your Sherlock dashboard, navigate to **Settings** → **API Keys**.
+  </Step>
+  <Step title="Create a New Key">
+    Click **New API Key**, give the key a descriptive name (for example, `production-backend` or `data-pipeline`), then click **Create**.
+  </Step>
+  <Step title="Copy Your Key">
+    Copy the key immediately and store it somewhere secure, such as a password manager or secrets vault. **Sherlock will not show you the key again** after you close this dialog.
+  </Step>
+</Steps>
+
+<Warning>
+  Never embed your API key in client-side code, browser JavaScript bundles, or public repositories. Treat it like a password — if it is ever exposed, delete it immediately and generate a replacement.
+</Warning>
+
+## Authenticate a Request
+
+Pass your API key as a Bearer token in the `Authorization` header on every request:
+
+```
+Authorization: Bearer <your_api_key>
+```
+
+The examples below show how to authenticate a request to the `/users` endpoint in three common environments:
+
+<CodeGroup>
+
+```bash curl
+curl https://api.sherlockscore.com/v1/users \
+  -H "Authorization: Bearer sk_live_abc123xyz"
+```
+
+```javascript Node.js
+const response = await fetch('https://api.sherlockscore.com/v1/users', {
+  headers: {
+    'Authorization': 'Bearer sk_live_abc123xyz',
+    'Content-Type': 'application/json'
+  }
+});
+const data = await response.json();
+```
+
+```python Python
+import requests
+
+response = requests.get(
+    'https://api.sherlockscore.com/v1/users',
+    headers={'Authorization': 'Bearer sk_live_abc123xyz'}
+)
+data = response.json()
+```
+
+</CodeGroup>
+
+## API Key Scopes
+
+Sherlock API keys are **workspace-scoped** — each key has access to all data within the workspace it was created in, and no access to any other workspace. All keys carry full read and write permissions across:
+
+- Engagement scores
+- User profiles
+- Account profiles
+- Events
+
+There are no read-only or resource-restricted key types at this time.
+
+## Rotating API Keys
+
+To rotate a key with zero downtime, follow this sequence:
+
+<Steps>
+  <Step title="Create a New Key">
+    Generate a new API key in **Settings** → **API Keys** as described above.
+  </Step>
+  <Step title="Update Your Integration">
+    Deploy the new key to your integration, environment variables, or secrets manager. Verify that your system is operating correctly with the new key.
+  </Step>
+  <Step title="Delete the Old Key">
+    Once you have confirmed the new key is working, return to **Settings** → **API Keys**, find the old key, and delete it. It will be invalidated immediately.
+  </Step>
+</Steps>
+
+<Note>
+  If your request returns a `401 Unauthorized` error, check that your `Authorization` header is present, that the value is correctly formatted as `Bearer <your_api_key>`, and that the key has not been deleted or revoked from your dashboard.
+</Note>

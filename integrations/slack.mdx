@@ -1,0 +1,98 @@
+---
+title: "Get Sherlock Alerts in Slack"
+sidebarTitle: "Slack"
+description: "Connect Sherlock to Slack to receive real-time notifications when users or accounts hit engagement thresholds, new PQLs emerge, or churn risk spikes."
+---
+
+Waiting for a weekly report to discover a high-intent user or a churning account means your team is always reacting instead of acting. Connecting Sherlock to Slack puts engagement signals directly in front of the people who can act on them — sales, customer success, and growth — the moment a score crosses a threshold that matters. With the right alerts configured, your team stays proactive without ever leaving the tools they already live in.
+
+## Prerequisites
+
+- Admin access to the Slack workspace where you want to post alerts
+- Admin access to your Sherlock workspace
+
+## Connect Sherlock to Slack
+
+<Steps>
+  <Step title="Open the Slack integration in Sherlock">
+    In your Sherlock dashboard, navigate to **Settings → Integrations → Slack**.
+  </Step>
+  <Step title="Initiate the connection">
+    Click **Connect Slack**. You'll be redirected to Slack's OAuth authorization page.
+  </Step>
+  <Step title="Authorize Sherlock in your Slack workspace">
+    Review the permissions Sherlock requests, select the Slack workspace you want to connect, and click **Allow**. You'll be redirected back to Sherlock once authorization is complete.
+  </Step>
+  <Step title="Choose a default notification channel">
+    From the **Default Channel** dropdown, select the Slack channel where Sherlock should post alerts. You can override this per alert type after saving.
+  </Step>
+  <Step title="Save your settings">
+    Click **Save**. Sherlock will post a confirmation message to your chosen channel to verify the connection is working.
+  </Step>
+</Steps>
+
+<Tip>
+  Create a dedicated **#sherlock-alerts** channel before connecting. Routing all Sherlock notifications to a single, purpose-built channel makes it easy for the whole team to monitor engagement signals without cluttering general or team-specific channels.
+</Tip>
+
+## Alert Types
+
+Sherlock supports three categories of Slack alert. Each can be enabled or disabled independently and routed to a different channel.
+
+<Tabs>
+  <Tab title="PQL Alerts">
+    **Product Qualified Lead (PQL) Alerts** fire when a user's or account's engagement score crosses the PQL threshold you've defined in Sherlock's scoring settings.
+
+    The alert message includes:
+    - User or account name
+    - Current engagement score
+    - The events that drove the score over the threshold
+    - A direct link to the user or account profile in Sherlock
+
+    PQL alerts are ideal for routing to a sales or SDR channel so reps can follow up while intent is high.
+  </Tab>
+  <Tab title="Churn Risk Alerts">
+    **Churn Risk Alerts** fire when a user's or account's engagement score drops below your configured churn-risk threshold. A declining score can signal disengagement before the customer ever contacts support or submits a cancellation request.
+
+    The alert message includes:
+    - User or account name
+    - Current score and the score at peak engagement
+    - Last active date
+    - A direct link to the profile in Sherlock
+
+    Route churn risk alerts to your customer success channel so CSMs can reach out proactively.
+  </Tab>
+  <Tab title="Score Milestones">
+    **Score Milestone Alerts** fire when a user reaches a new personal high score. Milestones signal deepening product adoption and are useful for identifying expansion opportunities or candidates for case studies and advocacy programs.
+
+    The alert message includes:
+    - User name and associated account
+    - New high score
+    - Top contributing events
+
+    Consider routing milestone alerts to a shared wins channel to celebrate product adoption across the team.
+  </Tab>
+</Tabs>
+
+## Customizing Alert Thresholds
+
+Each alert type has its own threshold setting, letting you tune sensitivity independently:
+
+- **PQL threshold** — Set the minimum engagement score a user or account must reach to trigger a PQL alert. Navigate to **Settings → Scoring → PQL Threshold** to adjust this value.
+- **Churn risk threshold** — Set the maximum engagement score below which Sherlock considers a user or account at risk. Navigate to **Settings → Scoring → Churn Risk Threshold**.
+- **Score milestone cadence** — Choose whether milestone alerts fire on every new high score or only at defined intervals (e.g., every 10-point increase).
+
+You can also override the **destination channel** for each alert type from the Slack integration settings page, so PQL alerts go to `#sales-pipeline` while churn alerts go to `#cs-risk`.
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="I'm not receiving alerts in Slack">
+    - Confirm that the alert type you expect is toggled **Enabled** in **Settings → Integrations → Slack**.
+    - Check that the destination channel is spelled correctly and that Sherlock's bot has been **invited to the channel** (run `/invite @Sherlock` in the channel if needed).
+    - Verify that your scoring thresholds are set to realistic values — if the PQL threshold is set very high, no alerts will fire until scores reach that level.
+  </Accordion>
+  <Accordion title="The Sherlock bot was posting but has stopped">
+    Slack OAuth tokens can expire or be revoked if a Slack admin removes the app or rotates credentials. Navigate to **Settings → Integrations → Slack** and click **Re-authorize** to generate a fresh token and restore posting.
+  </Accordion>
+</AccordionGroup>

@@ -1,0 +1,90 @@
+---
+title: "Core Concepts: How Sherlock Scores Engagement"
+sidebarTitle: "Core Concepts"
+description: "Learn how Sherlock's engagement scoring model works, from raw product events to ranked user and account scores that power your entire go-to-market."
+---
+
+Before you start tuning weights or building PQL alerts, it is worth spending a few minutes understanding how Sherlock turns raw product activity into the engagement scores your whole go-to-market team will act on. This page explains every key concept in plain language — no data science background required. The better you understand the model, the more accurately you can configure it to reflect what great engagement actually looks like in your product.
+
+## Product Events
+
+A **product event** is any action a user takes inside your product that your application records. Examples include `project_created`, `report_exported`, `invited_teammate`, or `subscription_upgraded`. Events are the raw material Sherlock works with — without them, there is nothing to score.
+
+Sherlock receives events through your [Segment](https://segment.com) workspace. Every time Segment fires a `track` call for one of your identified users, it forwards that event to Sherlock in near real-time. Sherlock stores the event name, the user who triggered it, the account they belong to, and the timestamp.
+
+<Note>
+  Only `track` calls contribute to engagement scores. Sherlock also ingests `identify` and `group` calls, but those are used to enrich user and account **Traits** (see below) rather than to calculate scores.
+</Note>
+
+## Event Weights
+
+Not all events are equal. A user who exports a report is more deeply engaged than one who simply logs in. **Event weights** let you express that judgment numerically, on a scale of **1** (very low importance) to **10** (very high importance).
+
+You assign weights in **Events → Scoring**. Events you have not yet weighted default to a weight of **0** and do not contribute to scores at all until you configure them — this is intentional, so that noise events never pollute your scores without a deliberate decision on your part.
+
+| Weight range | What it signals |
+|---|---|
+| 1–3 | Routine activity; weak engagement signal (e.g., `logged_in`, `page_viewed`) |
+| 4–6 | Meaningful usage; moderate signal (e.g., `dashboard_viewed`, `search_performed`) |
+| 7–10 | Deep, high-intent behaviour; strong signal (e.g., `report_exported`, `invited_teammate`) |
+
+<Note>
+  Weights are relative to each other, not absolute. A weight of 10 does not produce a score of 10 — it means that event is weighted twice as heavily as a 5 and ten times as heavily as a 1 when scores are calculated.
+</Note>
+
+## Engagement Score
+
+The **engagement score** is the single number Sherlock assigns to each user and account to represent how actively and meaningfully they are using your product.
+
+Sherlock calculates it as a **weighted sum of events over a rolling time window**, then normalises the result so that scores are comparable across users regardless of when they signed up or how large their account is. In plain terms:
+
+1. Each event a user fires contributes its weight to their running total.
+2. Older events contribute less than recent ones (see **Score Decay** below).
+3. The raw total is normalised against the rest of your user base so you can rank users relative to each other.
+
+Scores update in **near real-time** as new events arrive from Segment — there is no nightly batch job to wait for. When a champion user goes on a product deep-dive on a Tuesday afternoon, their score starts climbing within seconds.
+
+<Note>
+  Normalisation means that adding a new high-weight event to your scoring configuration will shift scores across your entire user base, not just for users who fired that event. Give scores a few hours to stabilise after you make significant weighting changes.
+</Note>
+
+## User Scores vs. Account Scores
+
+Sherlock operates at two levels simultaneously.
+
+**User scores** reflect the engagement of a single, identified individual. They answer the question: *which specific people are getting the most value from our product right now?* User scores are ideal for surfacing PQLs to your sales team and for identifying power users worth talking to.
+
+**Account scores** answer a different question: *how healthy is this customer relationship overall?* An account score is a roll-up of the scores of every user associated with that account. Sherlock aggregates user-level activity so that a company where ten people are moderately active scores higher than a company where only one person is very active — because multi-user adoption is a stronger retention signal than a single power user.
+
+<Note>
+  Sherlock maps users to accounts using the `group` calls your application sends through Segment. If a user has not been associated with a group, they will appear in the **Users** tab but will not contribute to any account score.
+</Note>
+
+## Score Decay
+
+Engagement is not just about what a user has *ever* done — it is about what they are doing *lately*. **Score decay** ensures that older events contribute progressively less to a user's current score as time passes, so scores always reflect recent behaviour rather than a historical artefact.
+
+Think of it like a running average that naturally forgets the distant past. A user who was very active six months ago but has barely logged in since will see their score fall steadily over time, surfacing them as a churn risk. A previously dormant user who suddenly starts firing high-weight events will see their score climb quickly as those fresh events dominate the calculation.
+
+<Note>
+  Score decay is applied automatically — you do not need to configure it. The decay curve is calibrated to reflect typical SaaS usage cycles. Contact support if you need a custom decay window for your specific product context.
+</Note>
+
+## Traits
+
+**Traits** are attributes attached to users and accounts — things like name, email, job title, pricing plan, company size, or any custom property your application tracks. Sherlock ingests traits from Segment's `identify` calls (for users) and `group` calls (for accounts) and displays them alongside engagement scores.
+
+Traits do not affect scores directly, but they are essential for making scores actionable. When you see that a high-scoring user works at a 500-person company on a free plan, you have everything you need to route them to the right sales rep at exactly the right moment.
+
+<Note>
+  Traits sync automatically whenever Segment fires a new `identify` or `group` call. If a user's plan changes in your billing system and you send an updated `identify` call to Segment, Sherlock will reflect the new value within seconds.
+</Note>
+
+<CardGroup cols={2}>
+  <Card title="Event Weighting" icon="sliders" href="/scoring/event-weighting">
+    A practical guide to choosing the right weights for your events, with worked examples and common weighting strategies.
+  </Card>
+  <Card title="Account Scoring" icon="building" href="/scoring/account-scoring">
+    Learn how Sherlock rolls up user scores into account-level scores and how to use account scores to manage your customer portfolio.
+  </Card>
+</CardGroup>

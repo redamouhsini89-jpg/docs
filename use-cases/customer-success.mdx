@@ -1,0 +1,60 @@
+---
+title: "Empower Customer Success with Engagement Data"
+sidebarTitle: "Customer Success"
+description: "Give your customer success managers a live view of every account's engagement health in Sherlock, so they can prioritize upsells, QBRs, and at-risk interventions with real data."
+---
+
+Customer success managers are most effective when they know — before a call, before a renewal, before a complaint — exactly how engaged each account is. Sherlock gives every CSM a live, scored view of their entire book of business so they can spend less time asking "how is this account doing?" and more time taking meaningful action. Whether you're preparing for a QBR, building a save list, or hunting for upsell candidates, Sherlock surfaces the data you need without digging through product logs or waiting on a data pull.
+
+## Key CS Workflows Powered by Sherlock
+
+### 1. Health Scoring for QBRs
+
+Walk into every quarterly business review with a concrete engagement story. Open the account in Sherlock and pull up the **score trend chart** to show customers a timeline of their team's engagement over the quarter. Rising trends validate adoption; flat or declining trends open an honest conversation about where to focus. Showing customers their own data builds trust and positions your team as a proactive partner rather than a reactive support function.
+
+### 2. Upsell Identification
+
+Sort the **Accounts** tab by engagement score in descending order. Accounts at the top of the list are your most active customers — they're getting the most value from the product and are the most likely candidates for an expanded plan, additional seats, or a premium feature tier. A high score is a strong buying signal: these accounts have already proven they use what they pay for.
+
+### 3. At-Risk Intervention
+
+Filter the Accounts tab by **At Risk** status to instantly build your weekly save list. For each flagged account, Sherlock shows you the current score, the trend direction, and the event history, so you can prioritize outreach by urgency and tailor your message to what's actually happening in the account.
+
+## The Customer Success Dashboard View
+
+Sherlock's Accounts tab is the primary workspace for CS teams. Filter it by **CS owner** to see only the accounts assigned to a specific manager. CS owner assignment is driven by the `owner` trait on the account's Segment `group()` call — when your CRM syncs that trait to Segment, it flows into Sherlock automatically, so every CSM sees their own book without any manual configuration inside Sherlock.
+
+Use the column controls to surface the data points most relevant to your team: current score, score change over the last 7 or 30 days, PQL status, At Risk status, and last active date.
+
+## Exporting Account Score Data
+
+To share engagement data with stakeholders who don't have Sherlock access — executives, sales leadership, or external partners — download a CSV export directly from the Accounts tab.
+
+<Steps>
+  <Step title="Apply your filters">
+    In the Accounts tab, apply any filters you want to include in the export (e.g., a specific CS owner, a date range, or At Risk status only).
+  </Step>
+  <Step title="Export the data">
+    Click the **Export** button in the top-right corner of the Accounts tab and select **Download CSV**.
+  </Step>
+  <Step title="Share or analyze">
+    Open the CSV in a spreadsheet tool for offline analysis, paste scores into executive reports, or import into your BI tool of choice.
+  </Step>
+</Steps>
+
+## Integrating with Your CS Platform
+
+If your team uses a dedicated customer success platform, use Sherlock's CRM sync to push engagement scores to the matching account fields. Map Sherlock's `account_score` and `churn_risk` values to the health score and risk fields in your CS platform so that CSMs never have to toggle between tools. Score updates in Sherlock flow through your CRM on each sync cycle, keeping your CS platform's health data current without any manual effort.
+
+<Tip>
+  Add a link to the Sherlock account record directly inside your CRM account layout. Most CRMs support a custom URL field — populate it with the deep link to the Sherlock account page and label it **View in Sherlock**. CSMs can jump straight to the engagement timeline with a single click, right from the tool they already live in.
+</Tip>
+
+<CardGroup cols={2}>
+  <Card title="Churn Prevention" icon="triangle-exclamation" href="/use-cases/churn-prevention">
+    Set up at-risk thresholds and response playbooks to save accounts before they cancel.
+  </Card>
+  <Card title="CRM Integration" icon="arrows-rotate" href="/integrations/crm">
+    Sync Sherlock scores and flags to your CRM contact and company records automatically.
+  </Card>
+</CardGroup>

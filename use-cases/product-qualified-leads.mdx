@@ -1,0 +1,62 @@
+---
+title: "Identify Product Qualified Leads with Sherlock"
+sidebarTitle: "Product Qualified Leads"
+description: "Use Sherlock engagement scores to automatically flag your highest-intent free trial users as Product Qualified Leads so your sales team focuses on accounts most likely to convert."
+---
+
+A Product Qualified Lead (PQL) is a user or account that has experienced genuine value in your product — not just clicked an ad or downloaded a whitepaper. For product-led growth companies, PQLs are a far more reliable signal than Marketing Qualified Leads (MQLs) because they're rooted in actual behavior: the prospect has already done something meaningful inside your product. Sherlock turns that behavior into a score, and when the score crosses your defined threshold, it automatically surfaces the lead to your sales team at exactly the right moment.
+
+## How Sherlock Identifies PQLs
+
+Sherlock continuously calculates engagement scores for every user and account by summing the weighted values of the product events they fire. You define what "meaningful engagement" looks like by setting a score threshold and a time window. Any user or account whose score meets or exceeds that threshold within the window is automatically flagged as a PQL — no manual review required.
+
+For example, you might decide that a score of **60 or higher in the last 30 days** represents a lead worth pursuing. Sherlock monitors every account against that bar in real time and raises the PQL flag the moment an account crosses it.
+
+## Configure Your PQL Threshold
+
+<Steps>
+  <Step title="Open PQL Settings">
+    In the Sherlock sidebar, navigate to **Settings → PQL Settings**.
+  </Step>
+  <Step title="Set your score threshold">
+    Enter the minimum engagement score a user or account must reach to qualify as a PQL. A common starting point is **60**.
+  </Step>
+  <Step title="Set your time window">
+    Choose the rolling time window over which the score is evaluated — for example, **30 days**. Only events fired within this window count toward the PQL calculation.
+  </Step>
+  <Step title="Save your configuration">
+    Click **Save**. Sherlock immediately begins evaluating all users and accounts against your new threshold.
+  </Step>
+</Steps>
+
+## Viewing PQL-Flagged Users and Accounts
+
+Once your threshold is saved, any user or account that qualifies appears with a **PQL badge** in both the **Users** tab and the **Accounts** tab. You can filter either view to show only PQL-flagged records, making it easy for your sales team to build a prioritized outreach list.
+
+## Push PQLs to Your CRM
+
+Sherlock automatically syncs a `pql_status: true` field to the corresponding contact and company records in your connected CRM whenever a user or account crosses the PQL threshold. Your sales reps can create CRM views, triggers, and sequences based on that field — so the moment a lead qualifies, it lands in the right workflow without any manual handoff.
+
+## Get Slack Alerts for New PQLs
+
+Don't make your sales team refresh a dashboard. Instead, send them an instant notification the moment a new PQL emerges.
+
+<Steps>
+  <Step title="Open Notification Settings">
+    Navigate to **Settings → Notifications**.
+  </Step>
+  <Step title="Enable PQL Alert">
+    Toggle on **PQL Alert** and select the Slack channel where alerts should be posted.
+  </Step>
+  <Step title="Save">
+    Click **Save**. Your team will now receive a Slack message every time an account crosses the PQL threshold, including the account name, current score, and a direct link to the record in Sherlock.
+  </Step>
+</Steps>
+
+## Real-World Example
+
+> A free trial account has three active users. Over the past two weeks, they have collectively completed onboarding, connected a third-party integration, and exported their first data set. Each of those actions carries a high event weight in Sherlock, pushing the account's score to 74 — well above the configured threshold of 60. Sherlock immediately flags the account as a PQL and posts an alert to the `#sales-pql` Slack channel. The assigned sales rep sees the notification, opens the Sherlock record, reviews the engagement timeline, and reaches out with a personalized message referencing exactly what the team has already accomplished in the product.
+
+<Tip>
+  Start with a **conservative threshold** (higher score, e.g., 70–80) when you first go live. This keeps your initial PQL list small and high-confidence, making it easy to validate that flagged accounts genuinely convert. Once you've confirmed the signal, tune the threshold down gradually to widen the funnel.
+</Tip>

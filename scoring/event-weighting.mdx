@@ -1,0 +1,64 @@
+---
+title: "Weight Your Events to Reflect True Engagement"
+sidebarTitle: "Event Weighting"
+description: "Assign importance weights from 1 to 10 to each product event so Sherlock scores reflect the actions that actually predict retention and growth for your SaaS."
+---
+
+Event weighting is the single most important configuration step in Sherlock. Without it, every event you track carries equal influence on the score — meaning a casual page view counts the same as a user completing onboarding or inviting a teammate. By assigning a weight to each event, you tell Sherlock which behaviours truly signal engagement, retention risk, or expansion potential. The quality of your scores is directly proportional to the thought you put into your weights.
+
+## The 1–10 Weight Scale
+
+Sherlock uses a simple 1–10 scale. Think of it as a dial that controls how loudly each event speaks in the final score. Use the examples below as a starting framework, then tune based on your own retention data.
+
+| Weight range | Signal level | Example events |
+|-------------|-------------|----------------|
+| **1–2** | Low signal | Page viewed, session started, logged in |
+| **3–5** | Moderate signal | Feature used, report generated, dashboard opened |
+| **6–8** | High signal | Integration connected, teammate invited, export completed |
+| **9–10** | Critical signal | Onboarding completed, primary object created, subscription upgraded |
+
+The goal is **meaningful differentiation**. A login tells you someone showed up. A completed onboarding tells you they found value. Those two events should never carry the same weight.
+
+## How to Weight Your Events
+
+Navigate to **Events → Scoring** in the Sherlock dashboard to access the full list of events Sherlock has received from Segment.
+
+<Steps>
+  <Step title="Find your event">
+    Locate the event you want to weight in the event list. Use the search bar at the top of the page to filter by event name if your list is long.
+  </Step>
+  <Step title="Click the weight field">
+    Click directly on the weight value in the **Weight** column next to the event name. The field becomes editable inline.
+  </Step>
+  <Step title="Enter a value from 1 to 10">
+    Type your chosen weight. Decimal values are not supported — use whole numbers only.
+  </Step>
+  <Step title="Save">
+    Click **Save** or press **Enter**. The change is applied immediately, and Sherlock begins incorporating the new weight into scores as new events arrive.
+  </Step>
+</Steps>
+
+<Tip>
+  You can change any event's weight at any time and Sherlock will **recalculate scores retroactively** — your historical data is re-scored using the updated weights. You never need to wait for new events to see the impact of a weighting change.
+</Tip>
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion title="Start small and refine over time">
+    Resist the urge to weight every event at once. Begin with **5–8 of your most meaningful events** — the ones your team already knows correlate with successful customers. Get comfortable reading the resulting scores before expanding your event set. Incremental tuning produces better signal than a big-bang configuration.
+  </Accordion>
+  <Accordion title="Focus on retention-correlated events">
+    Look at your retained customers from the last 12 months and ask: what did they do in their first 30 days that churned customers did not? Those actions deserve your highest weights. If you have cohort data in a BI tool, bring it into the conversation before you configure weights.
+  </Accordion>
+  <Accordion title="Keep vanity metrics at the bottom of the scale">
+    Page views, logins, and session starts are useful for spotting inactivity, but they are weak predictors of retention on their own. Assign them weights of 1–2 so they contribute a small signal without drowning out your high-value events.
+  </Accordion>
+  <Accordion title="Review weights quarterly">
+    Your product evolves — new features ship, old ones get deprecated, and user behaviour changes. Schedule a quarterly review of your event weights with your product and CS teams. Weights that made sense at launch may no longer reflect how customers succeed today.
+  </Accordion>
+</AccordionGroup>
+
+<Warning>
+  Setting all of your events to weight 10 effectively gives every event equal importance — the same outcome as having no weights at all. Sherlock's scoring power comes from **differentiation**. If everything is critical, nothing is. Use the full range of the scale deliberately.
+</Warning>

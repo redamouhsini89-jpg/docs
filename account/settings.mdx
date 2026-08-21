@@ -1,0 +1,58 @@
+---
+title: "Manage Your Sherlock Account Settings"
+sidebarTitle: "Settings"
+description: "Configure your Sherlock workspace name, timezone, data retention, and notification preferences from the Account Settings page in your Sherlock dashboard."
+---
+
+The Account Settings page is your central hub for configuring how Sherlock behaves for your entire workspace. Navigate there by clicking your workspace name in the top-left corner of the Sherlock dashboard and selecting **Settings**. From here, you can update your workspace identity, tune scoring behavior, control notifications, and manage data policies.
+
+<Note>
+  Only workspace **Admins** can access and modify Account Settings. Editors and Viewers will not see the Settings option in their navigation.
+</Note>
+
+## General
+
+The General section controls the basic identity of your Sherlock workspace.
+
+- **Workspace Name** — The display name used throughout the app and in notification messages. Update it to match your company or team name.
+- **Timezone** — Sets the timezone used when calculating score time windows (for example, "last 7 days" resolves relative to midnight in this timezone). Choose the timezone where your core team operates.
+- **Company Website** — An optional reference field used to associate your workspace with your domain.
+
+<Warning>
+  Changing your workspace timezone does **not** retroactively adjust historical scores. Scores already calculated remain anchored to the timezone that was active at the time of calculation. Only new score calculations will reflect the updated timezone.
+</Warning>
+
+## Scoring
+
+The Scoring section surfaces the most important global scoring parameters. Adjust these settings to match how your team defines engagement.
+
+- **Default Time Window** — The rolling window (e.g., 7 days, 30 days) used when computing scores unless overridden at the event level.
+- **Score Decay Half-Life** — Controls how quickly older events lose influence on the current score. A shorter half-life makes scores more sensitive to recent activity.
+- **Score Recalculation** — Configure how frequently Sherlock recalculates all user and account scores (e.g., hourly, daily).
+
+For a deep dive into every scoring parameter and how to weight individual events, see the [Scoring Customization](/scoring/customization) page.
+
+## Notifications
+
+The Notifications section lets you define where and how often Sherlock sends workspace-level alerts.
+
+- **Slack Channel** — Connect a default Slack channel to receive score-change notifications and weekly digests. You can override this channel on a per-alert basis.
+- **Email Digest Frequency** — Choose how often workspace members receive a summary email: daily, weekly, or never. Individual members can further adjust their own email preferences from their profile.
+
+## Data & Privacy
+
+Use this section to align Sherlock's data handling with your organization's privacy policies and regulatory obligations.
+
+- **Data Retention Period** — Sherlock retains raw event data for **12 months** by default. You can shorten this period if your policy requires it. Reducing the retention window permanently deletes event data older than the new limit.
+- **Anonymize User Traits** — Enable this option to strip personally identifiable trait values (such as names and email addresses) from stored user profiles while preserving behavioral event data and scores.
+- **GDPR Deletion Requests** — To submit a right-to-erasure request for a specific user's data, contact [Sherlock Support](mailto:support@sherlock.io) with the user's identifier. Deletions are processed within 30 days in accordance with GDPR Article 17.
+
+## Danger Zone
+
+The Danger Zone contains irreversible workspace-level actions. Proceed with caution.
+
+- **Delete Workspace** — Permanently deletes your Sherlock workspace, including all users, accounts, scores, events, and configuration. To confirm deletion, you must type your workspace name in the confirmation dialog before the action is permitted.
+
+<Warning>
+  Deleting your workspace is **permanent and cannot be undone**. All data — including historical scores and event records — will be immediately and irrecoverably removed. Export any data you need before proceeding.
+</Warning>
